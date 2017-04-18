@@ -1,0 +1,24 @@
+\begin{tikzpicture}
+    % State: ACK with different content
+    \node[state,  double,   	% layout (defined above)
+    text width=1.8cm, 	% max text width
+    anchor=center] (init) 	% posistion relative to the center of the 'box'
+    {\textbf{S0, Empty}};
+
+    \node[state,    	% layout (defined above)
+    text width=1.8cm, 	% max text width
+    right of=init,
+    node distance=3.5cm,
+    anchor=center] (ready) 	% posistion relative to the center of the 'box'
+    {\textbf{S0, Full}};
+
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (ready)   edge[bend left, ->]
+            node[below] {[\textbf{C2}, $t > 0$] \emph{dB2 := buf dC2 :=  dist(param)}}
+        (init)
+
+        (init)  edge[bend left, ->]
+            node[above] {[\textbf{A2}] \emph{buf := dA2, t := 0}}
+        (ready);
+\end{tikzpicture}

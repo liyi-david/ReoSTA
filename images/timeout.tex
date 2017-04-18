@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+    % part 1. router
+    \ionode{(in)}{(0, 0)}{node[left] {A}} 
+    \mixednode{(wp1)}{(1, 0)}{node[below] {B}}
+    \mixednode{(wp2)}{(3, 0)}{node[below] {D}}
+    \mixednode{(wpup)}{(3, 1)}{node[right] {C}}
+    \ionode{(out)}{(4, 0)}{node[right] {E}}
+
+    \sync{(in)}{(wp1)}{}
+    \fifoe{(wp1)}{(wp2)}{}
+    \Lchannel{timer}{(wp1)}{(wpup)}{1}{v}{+}{node[above left] {\scriptsize dist(params)}}
+    \syncdrain{(wpup)}{(wp2)}{}
+    \sync{(wp2)}{(out)}{}
+    
+
+\end{tikzpicture}

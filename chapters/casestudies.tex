@@ -1,0 +1,102 @@
+\section{Case Studies}
+\label{sec:casestudies}
+
+
+With support of the composition operators, Reo can be used to capture various coordination senarios in the real world. In this section, we present two examples: \emph{Probabilistic Router} and \emph{Embedded Control System}.
+
+
+\begin{example}[Probabilistic Router]
+\emph{Router} is an old, but also popular example that has shown up in several Reo papers \cite{Baier2006a,Arbab2006}. As shown in Fig.~\ref{fig:router} (a), a \emph{Router} uses two \emph{LossySync} channels and a \emph{SyncDrain} channel to make sure that a coming data value is only sent to one of its sink ends. This choice is made nondeterministically at $C$, where the \emph{Merger} channel exists. Here we show how the nondeterministic behavior is resolved as probabilistic behavior through the \emph{StochasticChoice} channel.
+
+
+\begin{figure}[H]
+    \centering
+    \input{images/router}
+    \caption{From Router to Probabilistic Router}
+    \label{fig:router}
+\end{figure}
+
+We attach a new path $A\rightarrow A'\rightarrow B'\rightarrow B$ to the original \emph{Router}, including a \emph{StochasticChoice}, a \emph{Filter} and a \emph{SyncDrain}, as depicted in Fig.~\ref{fig:router} (b).
+When the \emph{StochasticChoice} channel is triggered, a data value 0 or 1 will be generated, and in turn passed to the \emph{Filter} channel. \ly{If the value is equal to $1$, it will be sent to the \emph{SyncDrain} channel $BB'$. In this case, the incoming value has to go through the path $A\rightarrow B\rightarrow E$. Otherwise, if the sampled value equals $0$ and get lost in the \emph{Filter}, the incoming value will be sent to $F$ as $B$ won't accept any values from $A$.}
+
+% which ensures that the outputs randomly choose two sink ends accordinging to the distrubution, i.e. with the same probability.
+% Generally speaking, the random router keeps the same structure with its original version, i.e. one source end and two sink ends, but
+% the probabilistic behavior is in consideration.
+% To alter the probability of two ends receiving data items, only the parameter of the $StochasticChoice$ channel need update.
+% In this way, the nondeterministic router can be turned into a probabilistic router with controllable probability and distribution. 
+
+The corresponding $\nSTA$ of a \emph{Probabilistic Router} can be deduced on the basis of primitive channels' semantics and product operators.
+There are two locations in the product $\nSTA$, \ly{since the primitive channels in the connector are all synchronous (including only one location) except the \emph{StochasticChoice} channel (having two locations). According to the \emph{product} operator, the locations should be labelled as tuples like \emph{(S0,...,Init,...)}. Here for simplicity we use \emph{Init} and \emph{Ready} instead.}
+The final result $\nSTA$, after \emph{hiding} all the internal nodes except \emph{A,E,F}, is shown in Fig.~\ref{fig:probabilistic_router}. Analogous to \emph{Replicator} and \emph{Merger}, \emph{Probabilistic Router} can also be regarded as a ternary channel afterwards.
+\begin{figure}[H]
+\centering
+\input{images/probabilistic_router}
+\caption{$\nSTA$ of Probabilistic Router}
+\label{fig:probabilistic_router}
+\end{figure}
+\end{example}
+
+\begin{example}[Embedded Control System]
+\ly{
+    A common embedded control system usually comprises a set of sensors to obtain information from the environment, a set of actuators to operate on the environment, and a main processor to process information and give instructions.
+}
+
+In the following we show how to use Reo connectors to formalize the coordination part of an embedded control system, which is a simplified version of the embedded controller model with modular redundancy in \cite{Kwia2007}.
+%\ly{
+%    \cite{Kwia2007} proposed an embedded controller model with modular redundancy.  In this paper, we simplify the original model (otherwise the connector would be too complicated to present), and show how to formalize its coordination part as a Reo connector under our framework.
+%}
+
+\begin{figure}[H]
+    \centering
+    \resizebox{.8\textwidth}{!}{
+        \input{images/embedded}
+    }
+    \caption{Embedded Control System}
+    \label{fig:em}
+\end{figure}
+
+Sensors, actuators and the main processor are regarded as components in this example.
+\ly{The assumption is, all the components are reliable but their communication is not. Such behavior is captured by a \emph{Probabilistic Filter} connector \textbf{PF} which is defined in Fig.~\ref{fig:em2}.}
+The main processor, connected to ports \emph{$M_{in}$} and \emph{$M_{out}$},
+reads data coming from sensors, and passes instructions to the actuator
+through port \emph{Input} and \emph{Output}, respectively.
+\ly{The system fails to obtain an input only when both \emph{Probabilistic Filter}s fail.}
+
+\ly{
+    Normally, the main processor will wait for potential input. However, due to the unreliable channels, we have to set a timeout mechanism to report system failures. In this model, a complete cycle (including data acquisition, data processing and instruction transmission) should be finished within a certain duration. Otherwise a \emph{TIMEOUT} signal will be generated by a \emph{Reset Timer} connector \textbf{RT}.
+}
+
+\begin{figure}[H]
+    \centering
+    \resizebox{.8\textwidth}{!}{
+        \input{images/pf_rt}
+    }
+    \caption{Probablistic Filter (left) and Reset Timer (right)}
+    \label{fig:em2}
+\end{figure}
+
+A \emph{Probabilistic Filter} drops data with a certain probability, i.e. $1 - p$ in this example; while
+the \emph{Reset Timer} with time bound $t_{max}$ is a timer that supports reset operation (triggered by an extra source end \emph{Reset}). \ly{Reseting a \emph{Reset Timer} will prevent it from generating \emph{timeout} signals until it receives new value. The formal definition of \emph{Probabilistic Filter} and \emph{Reset Timer} is provided in Fig. \ref{fig:em2}. This also shows how Reo connectors are encapsulated and reused.}
+
+There are 8 locations in the $\nSTA$ of the embedded system,
+consisting of triples which symbolizes the configuration of
+    two probabilistic filters and the reset timer.
+The corresponding $\nSTA$ represented in JANI format\cite{JaniSpec} is provided in Appendix.
+% elements are ommited except locations and edges.
+\end{example}
+
+% \begin{example}[Delayed Channel]
+% In this example, we propose an extension of delayed FIFO channels. It is obtained by replacing the timer channel with $StochasticTimer$ channel. The $SyncDrain$ channel serves to assure that the data item written at the source end can be taken exactly after a period of time randomly set by the $StochasticTimer$ channel. However, we can change the parameter of $StochasticTimer$ channel to meet some requirements. For example, if we want to delay the output by one time unit with greater probability or two units, we can set the $dist$ with $0.9\mapsto 1$ and $0.1\mapsto 2$. To a certain extent, it also reflects that a longer time delay interval is unbearable.
+% \begin{figure}[H]
+%     \centering
+%     \input{images/timeout}
+%     \caption{Delayed Channel without Timeout}
+% \end{figure}
+% Urgency has to be considered in the aforementioned semantics, otherwise an inappropriate case will arise. The data item may be kept in the buffer and the timeout signal is just dropped in the meanwhile. If we don't consider urgency, the semantics which is exactly in the form of $\nSTA$ can be simply drawn as the following figure.
+
+% \begin{figure}[H]
+%     \centering
+%     \input{images/timeout_sta}
+%     \caption{Semantics of Delayed Channel without Timeout}
+% \end{figure}
+% \end{example}

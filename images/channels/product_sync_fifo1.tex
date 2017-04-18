@@ -1,0 +1,109 @@
+\begin{tikzpicture}
+    % draw the connector
+    \node (bfp) at (-4.25, 3.1) {\tt Before Product};
+    \node (bfp) at (-4.25, 0.7) {\tt After Product};
+    \node (bfp) at (-4.25, -2.3) {\tt After Hiding};
+
+    \ionode{(A)}{(-6, 2.6)}{node[left] {A}};
+    \ionode{(B1)}{(-4.7, 2.6)}{node[right] {B}};
+    \ionode{(B2)}{(-3.8, 2.6)}{node[left] {B}};
+    \ionode{(C)}{(-2.5, 2.6)}{node[right] {C}};
+    \sync{(A)}{(B1)}{}
+    \fifoe{(B2)}{(C)}{}
+
+    \ionode{(Ad)}{(-6, 0)}{node[left] {A}};
+    \ionode{(Bd)}{(-4.25, 0)}{node[above=0.1cm] {B}};
+    \ionode{(Cd)}{(-2.5, 0)}{node[right] {C}};
+    \sync{(Ad)}{(Bd)}{}
+    \fifoe{(Bd)}{(Cd)}{}
+
+    \ionode{(Ah)}{(-6, -2.7)}{node[left] {A}};
+    \ionode{(Bh)}{(-4.25, -2.7)}{};
+    \ionode{(Ch)}{(-2.5, -2.7)}{node[right] {C}};
+    \sync{(Ah)}{(Bh)}{}
+    \fifoe{(Bh)}{(Ch)}{}
+
+    % State: ACK with different content
+    \node[state,  double,   	% layout (defined above)
+    text width=1.9cm, 	% max text width
+    anchor=center] (init) at (1.5,0)	% posistion relative to the center of the 'box'
+    {\textbf{S0, Empty}};
+
+    \node[state,    	% layout (defined above)
+    text width=1.9cm, 	% max text width
+    right of=init,
+    node distance=4cm,
+    anchor=center] (ready) 	% posistion relative to the center of the 'box'
+    {\textbf{S0, Full}};
+
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (ready)   edge[bend left, ->]
+            node[below] {[\textbf{C}, $t > 0$] \emph{dC := buf}}
+        (init)
+
+        (init)  edge[bend left, ->]
+            node[above] {[\textbf{A,B}] \emph{dB := dA, buf := dA, t := 0}}
+        (ready);
+
+    \node[state, double,   	% layout (defined above)
+    text width=1.9cm, 	% max text width
+    anchor=center] (hinit) at (1.5,-2.7)	% posistion relative to the center of the 'box'
+    {\textbf{S0, Empty}};
+
+    \node[state,    	% layout (defined above)
+    text width=1.9cm, 	% max text width
+    right of=hinit,
+    node distance=4cm,
+    anchor=center] (hready) 	% posistion relative to the center of the 'box'
+    {\textbf{S0, Full}};
+
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (hready)   edge[bend left, ->]
+            node[below] {[\textbf{C}, $t > 0$] \emph{dC := buf}}
+        (hinit)
+
+        (hinit)  edge[bend left, ->]
+            node[above] {[\textbf{A}] \emph{buf := dA, t := 0}}
+        (hready);
+
+    % sync
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width    
+    anchor=center] (S0) 	% posistion relative to the center of the 'box'
+    at (2, 2.6)
+    {\textbf{S0}};
+
+    \path (S0)  edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A, B}] \\
+            \emph{dB := dA}
+        \end{tabular}
+    } (S0);
+
+    % FIFO1
+    \node[state,    	% layout (defined above)
+    text width=1.5cm, 	% max text width
+    node distance=3.6cm,
+    anchor=center] (fifoready) 	% posistion relative to the center of the 'box'
+    at (7,2.6)
+    {\textbf{Full}};
+
+    \node[state, double,   	% layout (defined above)
+    text width=1.5cm, 	% max text width    
+    left of=fifoready,
+    node distance=3cm,
+    anchor=center] (fifoinit) 	% posistion relative to the center of the 'box'
+    {\textbf{Empty}};
+
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (fifoready)   edge[bend left, ->]
+            node[below] {[\textbf{C}, $t > 0$] \emph{dC := buf}} 
+        (fifoinit)
+
+        (fifoinit)  edge[bend left, ->]
+            node[above] {[\textbf{B}] \emph{buf := dB, t := 0}} 
+        (fifoready);
+\end{tikzpicture}

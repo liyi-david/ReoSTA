@@ -1,0 +1,53 @@
+\begin{tikzpicture}
+    % State: ACK with different content
+    \node[state,    	% layout (defined above)
+    text width=2.5cm, 	% max text width    
+    anchor=center] (emptyinit) 	% posistion relative to the center of the 'box'
+    {Empty, Init};
+    
+    \node[state,    	% layout (defined above)
+    text width=2.5cm, 	% max text width
+    right of=emptyinit,
+    node distance=5.5cm,
+    anchor=center] (emptypending) 	% posistion relative to the center of the 'box'
+    {Empty, Pending};
+
+    \node[state,    	% layout (defined above)
+    text width=2.5cm, 	% max text width
+    above of=emptyinit,
+    node distance=3.5cm,
+    anchor=center] (fullinit) 	% posistion relative to the center of the 'box'
+    {Full, Init};
+
+    \node[state,    	% layout (defined above)
+    text width=2.5cm, 	% max text width
+    right of=fullinit,
+    node distance=5.5cm,
+    anchor=center] (fullpending) 	% posistion relative to the center of the 'box'
+    {Full, Pending};
+    
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (emptyinit)   edge[bend left=20, ->] 
+            node[below left] {
+                \begin{tabular}{c}
+                    [\textbf{A,B}] \emph{bd.buf := dA}, \\
+                    \emph{bc.delay := dist(params)}
+                \end{tabular}
+            }
+        (fullpending)
+
+        (fullpending)   edge[bend left=20, ->] 
+            node[right] {
+                \begin{tabular}{c}
+                    [\textbf{C,D,E}, \emph{bc.t = bc.delay}] \\
+                    \emph{dE := bd.buf},
+                \end{tabular}
+            }
+        (emptyinit)
+
+        (fullpending) edge[->]
+            node[above] {[\textbf{i}, $bc.t > bc.delay$]}
+        (fullinit)
+        ;
+\end{tikzpicture}

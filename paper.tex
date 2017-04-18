@@ -1,0 +1,72 @@
+\documentclass{llncs}
+
+% \usepackage[a4paper, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+
+% use float package to provide supprot for position option H (in figure env)
+\usepackage{float}
+\usepackage{afterpage}
+
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{reotex}
+\usepackage{subfigure}
+\usepackage{color}
+\input{images/tikzstyles}
+\newcommand{\xy}[1]{\textcolor{red}{#1}}
+\newcommand{\ly}[1]{\textcolor{blue}{#1}}
+\newcommand{\sem}[1]{$[\![{#1}]\!]$}
+% todo: what is the proper name of the new model ?
+\newcommand{\nSTA}{\mbox{STA}_r}
+\newcommand{\restrict}[2]{#1\restriction_{#2}}
+
+\title{Capturing Stochastic and Real-Time Behavior in Reo Connectors}
+
+\author{Yi Li, Xiyue Zhang, Yuanyi Ji and Meng Sun}
+\institute{
+    Department of Informatics and LMAM, School of Mathematical Sciences,\\
+    Peking University\\
+    \email{\{liyi\_math,zhangxiyue,jyy,sunm\}@pku.edu.cn}
+}
+
+\begin{document}
+    \maketitle
+
+    \begin{abstract}
+Modern distributed systems are often coupled with flexible
+architectures, composed of heterogenous components, and deployed on
+different execution nodes. Under such frameworks, connectors (or
+middlewares) are widely used to organize the separated components and
+make them functional. Apparently, reliability of such systems highly
+depends on the correctness of their connectors. Reo is a channel-based
+coordination language where complex connectors are constructed
+from simpler ones in a compositional approach. In this paper, we
+propose a stochastic and real-time extension of Reo, including a set
+of new primitive channels and an expressive semantics named
+\emph{Stochastic Timed Automata for Reo} ($\nSTA$). With the support
+of $\nSTA$, different coordination scenarios in existing Reo
+extensions can be easily encoded, integrated, and analyzed.
+    \end{abstract}
+    \begin{keywords}
+    Coordination, Stochastic, Real-time, Distributed Systems
+    \end{keywords}
+
+
+    \input{chapters/introduction}
+    \input{chapters/extension}
+    \input{chapters/semantics}
+    \input{chapters/casestudies}
+    \input{chapters/discussion}
+
+    \input{chapters/conclusion}
+
+    \bibliographystyle{splncs03}
+    \bibliography{coordination}
+
+    \input{chapters/appendix}
+
+	
+\end{document}

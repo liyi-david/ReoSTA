@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+    \mixednode{(i1)}{(1, 1)}{node[left] {$Input_1$}}
+    \mixednode{(i2)}{(1, 0)}{node[left] {$Input_2$}}
+
+    \mixednode{(a)}{(3, 1)}{node[above left] {A}}
+    \mixednode{(b)}{(3, 0)}{node[above left] {B}}
+
+    \mixednode{(c)}{(4, 0.5)}{node[above ] {C}}
+    \mixednode{(f)}{(4, -1.)}{node[below] {$Timeout$}}
+
+    \mixednode{(d)}{(7, 00.5)}{node[above] {D}}
+    \mixednode{(e)}{(7, -.25)}{node[below] {E}}
+
+    \mixednode{(o)}{(8, 0.5)}{node[right] {$Output$}}
+
+    \ionode{(m1)}{(5, 0.5)}{node[above] {$M_{in}$}}
+    \ionode{(m2)}{(6, 0.5)}{node[above] {$M_{out}$}}
+
+    \blackbox{(i1)}{(a)}{PF}{}
+    \blackbox{(i2)}{(b)}{PF}{}
+
+    \lossysync{(a)}{(c)}{}
+    \lossysync{(b)}{(c)}{}
+
+    \sync{(c)}{(m1)}{}
+    \sync{(m2)}{(d)}{}
+
+    \vrtimer{(c)}{(e)}{(f)}{RT}{}
+
+    \sync{(d)}{(e)}{}
+    \sync{(d)}{(o)}{}
+
+    \component{(1,-1)}{(8,2)}{}
+
+\end{tikzpicture}

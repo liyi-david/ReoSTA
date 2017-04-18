@@ -1,0 +1,41 @@
+\begin{tikzpicture}
+    \ionode{(A)}{(0,0)}{node [below=2] {A}}
+    \ionode{(B)}{(0,1.5)}{node [above=2] {B}}
+    \ionode{(C)}{(4.5,0)}{node [below=2] {C}}
+    \ionode{(D)}{(4.5,1.5)}{node [above=2] {D}}
+
+    \mixednode{(A1)}{(1.5,0)}{}
+    \mixednode{(B1)}{(1.5,1.5)}{}
+    \mixednode{(A2)}{(3,0)}{}
+    \mixednode{(B2)}{(3,1.5)}{}
+
+    \sync{(A)}{(A1)}{}
+    \sync{(B)}{(B1)}{}
+    \sync{(A2)}{(C)}{}
+    \sync{(B2)}{(D)}{}
+
+    \syncdrain{(A1)}{(B1)}{}
+    \timer{(A1)}{(A2)}{node [above=2] {0.5}}
+    \timer{(B1)}{(B2)}{node [above=2] {1}}
+    \syncdrain{(A2)}{(B2)}{}
+
+    % \ionode{(offIN)}{(5.5,0)}{}
+    % \mixednode{(offA)}{(7,0)}{}
+    % \xrouter{(offB)}{(8.5,0)}{}
+    % \xrouter{(offC)}{(7, 1.5)}{}
+    % \mixednode{(offD)}{(8.5,1.5)}{}
+    % \mixednode{(offE)}{(10, 0)}{}
+    % \mixednode{(offF)}{(10, 1.5)}{}
+    % \mixednode{(offOUT)}{(11.5, .75)}{}
+
+    % \sync{(offIN)}{(offA)}{}
+    % \timer{(offA)}{(offB)}{node [above] {t}}
+    % \syncdrain{(offC)}{(offD)}{}
+    % \fifoe{(offA)}{(offC)}{}
+    % \lossysync{(offB)}{(offE)}{}
+    % \syncdrain{(offC)}{(offE)}{}
+    % \fifoe{(offB)}{(offD)}{}
+    % \sync{(offD)}{(offF)}{}
+    % \sync{(offF)}{(offOUT)}{}
+    % \sync{(offE)}{(offOUT)}{}
+\end{tikzpicture}

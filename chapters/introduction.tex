@@ -1,0 +1,18 @@
+\section{Introduction}
+\label{sec:intro}
+
+Distributed systems have been booming everywhere in the past decades. On the one hand, Internet of Things (IoTs) are bringing network systems to daily life. Conventional devices are replaced by smart terminals, and in turn collected by central controller to construct `Smart Cities'. On the other hand, high-performance computation is being adapted from local workstations and clusters to cloud platform and elastic computation frameworks like Amazon EC2\cite{Newcombe2015} and Microsoft Azure\cite{Li2009}. These architectures are so popular that even small companies are starting to deploy their own private cloud systems. 
+
+In modern systems, component-based method is widely used to speed up the development process. Long-tested functional units are encapuslated as \emph{components}, and get integrated in various systems through the \emph{connectors}. Under this developing model, a connector often implements the core software protocol, and consequently, suffers frequently from different kind of bugs.
+Due to the distributed nature, it is really hard to have a bug-free connector designed manually. Unexpected scheduling and asynchronous clocks often lead to inconsistency, and on the other hand, unreliable connections and unstable delays make it even worse. A powerful framework is strongly required to formalize the connectors, and provided a basis for further formal analysis.
+
+Reo\cite{ARBAB2004}, as one of the most popular coordination languages, was designed to formalize the hierachy and communication process between components. Based on channels and nodes, Reo provides a compositional approach where complex connectors are built from simpler ones.
+In this paper, we extend Reo with new primitive channels and the enhanced semantics $\nSTA$, so that real-time and stochastic behavior can be easily handled.
+
+Compared with existing timed and stochastic (or probabilistic) semantics of Reo \cite{Meng2012,Meng2007,Baier2006,Arbab2009}, our work provides a more powerful and universal solution. 
+\begin{enumerate}
+    \item \emph{Both timed behavior and stochastic behavior are supported, but declared separately.} This makes it free to model various coordination senarios by different combination patterns.
+    \item \emph{Timelocks is avoided in this semantics, making the timed connectors fully implementable}. In the common semantics of timed Reo \cite{Arbab2006,Meng2012}, \emph{Timer} channels may get trapped in timelock, and in turn lead to unrealizable connectors.
+\end{enumerate}
+
+The paper is organized as follows. Section \ref{sec:reo} introduces Reo, the coordination language, and shows how we extend this language by adding new primitive channels. Then, in Section \ref{sec:semantics} we provide an adapted stochastic timed automata $\nSTA$ as its formal semantics. Section \ref{sec:casestudies} presents several examples. Related works and comparison are discussed in Section \ref{sec:discussion}. Finally, Section \ref{sec:conclusion} summarizes the paper and comes up with some future work we are going to work on.

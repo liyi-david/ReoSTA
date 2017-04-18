@@ -1,0 +1,51 @@
+\begin{tikzpicture}
+    \mixednode{(i1)}{(0, 0.8)}{node[left] {$Input_1$}}
+    \mixednode{(i2)}{(0, 0.0)}{node[left] {$Input_2$}}
+    \mixednode{(i3)}{(0, -.8)}{node[left] {$Input_3$}}
+
+    \xrouter{(a)}{(2, 0.8)}{node[above left] {A}}
+    \xrouter{(b)}{(2, 0.0)}{node[above left] {B}}
+    \xrouter{(c)}{(2, -.8)}{node[below left] {C}}
+
+    \mixednode{(d)}{(4, 0.5)}{node[above ] {D}}
+    \mixednode{(e)}{(4, -.5)}{node[below left] {E}}
+    \mixednode{(t)}{(4, -2.)}{node[below] {$Failure$}}
+
+    \mixednode{(f)}{(6, -.5)}{node[above] {F}}
+
+    \mixednode{(g)}{(8, 0.5)}{node[above] {G}}
+    \mixednode{(h)}{(8, -.5)}{node[above] {H}}
+    \mixednode{(i)}{(8, -1.25)}{node[below] {I}}
+
+    \mixednode{(o1)}{(10, 0.5)}{node[right] {$Output_1$}}
+    \mixednode{(o2)}{(10, -.5)}{node[right] {$Output_2$}}
+
+    \blackbox{(i1)}{(a)}{P}{}
+    \blackbox{(i2)}{(b)}{P}{}
+    \blackbox{(i3)}{(c)}{P}{}
+
+    \lossysync{(a)}{(d)}{}
+    \lossysync{(a)}{(e)}{}
+    \lossysync{(b)}{(d)}{}
+    \lossysync{(b)}{(e)}{}
+    \lossysync{(c)}{(d)}{}
+    \lossysync{(c)}{(e)}{}
+
+    \syncdrain{(d)}{(e)}{}
+
+    \blackbox{(e)}{(f)}{M}{}
+
+    \lossysync{(f)}{(g)}{}
+    \lossysync{(f)}{(h)}{}
+
+    \blackbox{(g)}{(o1)}{P}{}
+    \blackbox{(h)}{(o2)}{P}{}
+
+    \lossysync{(o1)}{(i)}{}
+    \lossysync{(o2)}{(i)}{}
+
+    \ptimer{(e)}{(i)}{(t)}{}
+
+    \component{(0,-2)}{(10,2)}{}
+
+\end{tikzpicture}

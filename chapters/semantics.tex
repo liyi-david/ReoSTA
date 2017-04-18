@@ -1,0 +1,305 @@
+\section{Stochastic Timed Automata for Reo}
+\label{sec:semantics}
+
+In this section, first we introduce the formal model $\nSTA$ that yields the basis for reasoning about timed and stochastic behavior of connectors. Then we define the new semantics for primitive Reo channels based on $\nSTA$, and explain how to construct the $\nSTA$ for complex connectors by applying the \emph{product} and \emph{hiding} operators to the $\nSTA$ for simpler ones.
+\subsection{$\nSTA$}
+
+Stochastic timed automata (STA) \cite{HahnHH14} is a powerful formalism to describe stochastic behavior and real-time behavior. Both continuous distribution and discrete distribution are supported in STA. In this paper, we slightly adapt STA as $\nSTA$ so that Reo channels can be depicted more naturally and clearly.
+Before touching the technical details of $\nSTA$, we first introduce some notations that will be used later.
+
+During the rest of this paper, we will use $\mathbb{D}$ to denote the \emph{data scope}, which can be any finite set, the set of real numbers $\mathbb{R}$ or their union. Namely, $\mathbb{D}$ is finite, or $\mathbb{R}\subseteq \mathbb{D}$ and $\mathbb{D}\backslash \mathbb{R}$ is finite. When the data scope is limited to finite sets, stochastic assignments are, obviously, not supported. For example, if $\mathbb{D}=\{1,2\}$, $v:=norm(e,\sigma)$ is an invalid assignment while $v':=1+\operatorname{B}(1, 0.5)$ is acceptable. We use $Dist(S)$ to denote the set of continuous or discrete distributions on $S$.
+
+\begin{definition}[Evaluations]
+Suppose $V$ is a finite set of variables, an \emph{evaluation} on $V$ is defined as a function $ev_V:V\rightarrow \mathbb{D}$ that maps a variable identifier to a value. Similarly, we can also define clock evaluations on $C$ as $ev_C:C\rightarrow \mathbb{R}$, where $C$ is a set of clock variables. Natually, we can use $EV_V$ to denote the set of all evaluations on $V$, $EV_C$ to denote the set of all clock evaluations on $C$, and $EV$ to denote their combination, i.e. 
+
+\begin{displaymath}
+    EV=\Bigg\{ev:V\cup C\rightarrow \mathbb{D}\cup\mathbb{R}|
+    ev(v)=
+    \left\{
+        \begin{array}{lr}
+            ev_v(v) & v\in V \\
+            ev_c(v) & v\in C
+        \end{array}
+    \right.
+    , ev_v\in EV_V, ev_c\in EV_C
+    \Bigg\}
+\end{displaymath}
+
+\end{definition}
+
+In practice, evaluations are usually represented by a set of assignment statements. E.g., \emph{\{a := TIMEOUT, b := 1, c := 0.5, $\cdots$\}}.
+
+In $\nSTA$, there is a very different concept named \emph{adjoint variable}. That is, for each external action $A$, when it shows up, there must be a data value coming along, and assigned to its adjoint variable \emph{dA}. Adjoint variables are used to describe the channels' behavior : channel ends are triggered if and only if a data value comes (or leaves).
+
+\begin{definition}[$\nSTA$]
+Stochastic Timed Automata for Reo ($\nSTA$) is defined as an 8-tuple $\langle L, l_0, Acts, V, V_0, C, Inv, E\rangle$ where:
+
+\begin{itemize}
+    \item $L$ is a finite set of locations,
+    \item $l_0\in L$ is an initial location,
+    \item $Acts$ is a finite set of actions with the internal action $i\in Acts$ (we use $Acts_e$ to denote the set of external actions $Acts\backslash \{i\}$),
+    \item $V$ is a finite set of variables that satisfies $\forall A\in Acts_e, dA\in V$,
+    \item $V_0\in EV$ is an initialized function for variables,
+    \item $C$ is a finite set of clocks (we always assume that $V\cap C=\varnothing$),
+    \item $Inv:L\rightarrow (EV\rightarrow Bool)$ is a function that maps locations to their corresponding invariants,
+    \item $E$ is a finite set of edges. An \emph{edge} of a $\nSTA$ is defined as a 5-tuple $\langle l, acts, g, u, l'\rangle$ where
+        \begin{itemize}
+            \item $l\in L$ is the source location,
+            \item $acts\in P(Acts_e)\cup\{\{i\}\}$ is a set of actions (external actions and internal actions do not appear on the same edge simultaneously). The transition can be fired either $acts=\{i\}$ or all external actions in $acts$ are prepared,
+            \item $g:EV\rightarrow Bool$ is the guard constraint that maps an evaluation (for both variables and clocks) to a boolean value \emph{true} or \emph{false},
+            \item $u:EV\rightarrow Dist(EV)$ is a random assignment that updates the current evaluation with a random sample following a certain distribution of $Dist(EV)$,
+            \item $l'\in L$ is the target location.
+        \end{itemize}
+\end{itemize}
+\end{definition}
+
+In the following, we write $l \xrightarrow{\textbf{acts}, g, u}_E l'$ instead of $\langle l, acts, g , u, l' \rangle \in E$, or simply $l \xrightarrow{\textbf{acts}, g, u} l'$ under ambiguity-free context. Meanwhile, in a $\nSTA$ graph we use [\textbf{acts}, \emph{g}]\emph{u} to label such a transition (see in Fig.~\ref{fig:basic}).
+
+\subsection{Semantics of Primitive Channels}
+As mentioned before, $\nSTA$ for a given Reo connector is constructed in a compositional way. In this subsection, we provide semantics of the primitive channels as $\nSTA$, including both original and extended ones. The \sem{\cdot} operator is used to denote \emph{semantics map} which maps a Reo connector to its semantics as $\nSTA$.
+
+\begin{figure}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \input{images/channels/basic}
+    }
+    \caption{Semantics of Primitive Channels}
+    \label{fig:basic}
+\end{figure}
+
+
+\begin{description}
+    \item[\sem{Sync(A, B)}] in Fig.~\ref{fig:basic}(a) has only one single location and a self-loop edge indicating the read-and-write operation. No variables are involved in this automata.
+    \item[\sem{LossySync(A, B)}] in Fig.~\ref{fig:basic}(b) is a variation of $Sync$ where data may be lost when flowing through. Here we use an extra edge to indicate this \emph{lossy} behavior.
+    \item[\sem{SyncDrain(A, B)}] in Fig.~\ref{fig:basic}(c) also consists of only one location. However, unlike \emph{Sync}, there are no assignments here since all the data items are simply dropped in this channel.
+    \item[\sem{AsyncDrain(A, B)}] in Fig.~\ref{fig:basic}(d) is a variation of \emph{SyncDrain} where we can only drop one value at a time\footnote{Different interpretations of \emph{AsyncDrain} have been proposed in \cite{ARBAB2004,Baier2006a}. For simplicity we choose the later one in \cite{Baier2006a}, and don't consider fairness issues.}.
+    \item[\sem{Filter\langle P\rangle(A,B)}] in Fig.~\ref{fig:basic}(e) has one location and two edges. One is for the satisfaction of filter predicate and the other is for failure.
+    \item[\sem{FIFO1(A,B)}] in Fig.~\ref{fig:basic}(f) consists of two locations and two edges, one for reading and one for writing. Variable \emph{buf} is used to store the value in the buffer. As mentioned earlier, data items are supposed to stay in the buffer for a positive delay, so we also need a clock $t$ even if it's not a timed channel.
+    \item[\sem{Replicator(A,B,C)}] in Fig.~\ref{fig:basic}(g) has only one location and one edge. The edge can be triggered if and only if a data value is obtained from $A$ and broadcast to both $B$ and $C$.
+    \item[\sem{Merger(A,B,C)}] in Fig.~\ref{fig:basic}(h) also has only one location, but two edges for two sink ends, respectively.
+    \item[\sem{Map\langle f\rangle(A,B)}] in Fig.~\ref{fig:basic}(i) is also a variation of \emph{Sync} where the mapping function $f$ will be applied to any flow-through data item.
+    \item[\sem{StochasticChoice\langle dist\rangle(A,B)}] in Fig.~\ref{fig:basic}(j) consists of two locations: \emph{init} and \emph{ready}. As this is a synchronous channel, you may find it kind of confusing. The idea is that the random sampling should \textbf{NOT} be performed synchronously. Otherwise, you may meet the case where two edges can be triggered at the same time, but guard of the later edge relies on the random assignment of the previous one. It's hard to describe such semantics natually, so we always assume that the random process is done before triggering the assignment.
+
+
+    \item[\sem{pTimer\langle t_0\rangle(A,T,B)}] in Fig.~\ref{fig:pTimer} consists of two locations and a large family of edges.
+        \ly{Various border behavior is covered in this semantic model, making it capable to meet different requirements.}
+        \begin{figure}[H]
+            \centering
+            \resizebox{.8\textwidth}{!}{
+                \input{images/channels/stochastic_timer_sta}
+            }
+            \caption{Semantics of pTimer}
+            \label{fig:pTimer}
+        \end{figure}
+\end{description}
+
+\subsection{Composition of Connectors as $\nSTA$}
+
+As mentioned before, connectors in Reo are constructed from simpler ones in a compositional approach. Now we show how connectors are composed by \emph{product} and \emph{hiding} operations on $\nSTA$.
+
+% The formal definition of $\nSTA$ has been specified hereinbefore. In this section, we will provide the compositional semantics for Reo connectors. As the replicate and merge operations have been specified as channels, we have no need to consider mixed nodes with multiple inputs or multiple outputs. On the automata level, the join of a flow-through node that we only need to consider will be implemented by the $product$ construction. Specifically, $product$ and $hiding$ operators are defined for $\nSTA$ to obtain the semantics of a stochastic timed Reo connector out of the $\nSTA$ corresponding to its basic channels.
+
+The \emph{product} operator is used to combine two connectors by joining their \emph{shared nodes} (\emph{shared actions} in $\nSTA$). In \emph{product} operations, we always assume that shared actions have the same identifiers, while other variables and clocks are all named without repetition. Before showing the formal definition of the \emph{product} operator, first we introduce a predicate \emph{compatible}.
+
+\begin{definition}[Compatible $\nSTA$]
+    Let $\mathscr{A}_{i}=\langle L_{i}, l_{0,i}, Acts_{i}, V_{i}, V_{0,i}, C_{i}, Inv_{i}, E_{i} \rangle$ be two $\nSTA$ (i=1,2), they are compatible if
+    \begin{itemize}
+        \item there's no conflicting initialization on shared variables, formalized as $\forall v\in V_1\cap V_2, V_{0,1}(v) = V_{0,2}(v)$, and
+        \item shared variables can only be assigned in one of them, i.e. if $v\in V_1\cap V_2$ and $v:=expr$ ($expr$ is an expression) appears in the assignments of $\mathscr{A}_1$, then $\forall e\in E_2$, e should not contain any assignment on $v$, and vice versa.
+    \end{itemize}
+    In other words, we don't allow two connectors to write on the same node. 
+\end{definition}
+
+\begin{definition}[Product]
+Let $\mathscr{A}_{i}=\langle L_{i}, l_{0,i}, Acts_{i}, V_{i}, V_{0,i}, C_{i}, Inv_{i}, E_{i} \rangle(i=1,2)$ be two compatible $\nSTA$, their product $\mathscr{A}=\mathscr{A}_{1}\bowtie \mathscr{A}_{2}$ is defined as:
+\[
+    \mathscr{A}_{1}\bowtie \mathscr{A}_{2}=\langle L_1\times L_2, (l_{0,1}, l_{0,2}), Acts_1\cup Acts_2, V_{1}\cup V_{2}, V_0, C_{1}\cup C_{2}, Inv, E\rangle
+\]
+where
+\begin{itemize}
+    \item $V_0(v)$ is equal to $V_{0,1}(v)$ if $v\in V_1\backslash V_2$, or $V_{0,2}(v)$ otherwise,
+    \item $Inv(l_1,l_2)(ev)=Inv_1(l_1)(\restrict{ev}{V_1\cup C_1})\land Inv_2(l_2)(\restrict{ev}{V_2\cup C_2})$, where $\restriction$ is used to restrict a function on certain domain,
+    \item $E$ is obtained through the following rules:
+        \begin{equation}
+            \frac{l_{1}\xrightarrow{\textbf{acts}_{1},g_{1},u_{1}}_{E_1} l_{1}', acts_{1}\cap Acts_{2}=\varnothing}{\langle l_{1},l_{2}\rangle\xrightarrow{\textbf{acts}_{1},g_{1},u_{1}}_E\langle l_{1}',l_{2}\rangle}
+        \end{equation}
+        \begin{equation}
+            \frac{l_{2}\xrightarrow{\textbf{acts}_{2},g_{2},u_{2}}_{E_2} l_{2}', acts_{2}\cap Acts_{1}=\varnothing}{\langle l_{1},l_{2}\rangle\xrightarrow{\textbf{acts}_{2},g_{2},u_{2}}_E\langle l_{1},l_{2}'\rangle}
+        \end{equation}
+        \begin{equation}
+            \label{equ:product}
+            \frac{l_{1}\xrightarrow{\textbf{acts}_{1},g_{1},u_{1}}_{E_1} l_{1}', l_{2}\xrightarrow{\textbf{acts}_{2},g_{2},u_{2}}_{E_2} l_{2}',acts_{1}\cap Acts_{2}=acts_{2}\cap Acts_{1}}
+        {\langle l_{1},l_{2}\rangle\xrightarrow{\textbf{acts}_{1}\cup \textbf{acts}_{2},g, u}_E\langle l_{1}',l_{2}'\rangle}
+        \end{equation}
+\end{itemize}
+\end{definition}
+% \item{$V_0$ is an initialized function obtained by assigning values to variables in $\mathscr{A}_{1}$ according to the initialization $V_{0,1}$ and assigning values to variables in $\mathscr{A}_{2}$ according to the initialization $V_{0,2}$.}
+% \item{A finite set of actions $Acts = Acts_{1}\cup Acts_{2}$.}
+% \item{$Inv$ is a function that assigns an invariant to each location which is obtained by $Inv(l_{1}, l_{2}) = Inv_{1}(l_{1})\wedge Inv_{2}(l_{2})$.}
+% \item{A finite set of edges $E$ is obtained through the rules which are shown in Definition 4.}
+% \end{itemize}
+
+In equation~\ref{equ:product}, guard formula is the logical conjunction of $g_1$ and $g_2$, formally $g(ev)=g_1(\restrict{ev}{V_1\cup C_1})\land g_2(\restrict{ev}{V_2\cup C_2})$ is defined simply following \emph{Inv}. However, the definition of $u$ is much more complicated. For example, in Fig.~\ref{fig:prodsyncandfifo} we may have \emph{dB := dA} as $u_1$, and \emph{dC := dB} as $u_2$. Their direct product is \emph{dB := dA, dC := dB}. Obviously, we need an order here to resolve the dependency between variables (otherwise these statements could become a great mess), which is provided as follows.
+
+\begin{enumerate}
+    \item Check all the assignment statements $v:=expr$ in $u_1$, and use expression $expr$ to replace all the existence of $v$ in both $u_2$ and $g_2$,
+    \item Reversely, check all $v:=expr$ in $u_2$, and replace their existence in both $u_1$ and $g_1$ (note that this replacement will also affect $g$),
+    \item Repeat the previous steps until nothing can be replaced,
+    \item Suppose $u_1'$ and $u_2'$ are the resolved assignment statements, we have
+        \begin{displaymath}
+            u(v)=\left\{
+            \begin{array}{lr}
+                u_1'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_1$}, \\
+                u_2'(v) & otherwise
+            \end{array}
+            \right.
+        \end{displaymath}
+\end{enumerate}
+
+%Correctness of these steps highly relies on the \emph{compatible} assumption \xy{which ensures} that we don't need to resolve assignment statements like \emph{a := b, b := a}.
+
+With the $product$ operator, we can obtain a rough combination of Reo connectors (as $\nSTA$). But there are still redundant statements that should have been simplified. We now introduce the $hiding$ operator which can be used to omit such unnecessary parts.
+
+\begin{definition}[Hideable Action]
+    Let $\mathscr{A}= \langle L, l_0, Acts, V, V_0, C, Inv, E\rangle$ be a $\nSTA$ and $A\in Acts$ is an action. We say $A$ is hideable in $\mathscr{A}$ if a) all the assignment statements do not depend on the value of $dA$ (i.e. $dA$ never appears on the right-hand side of any assignment statement), and b) $dA$ doesn't appear in any guard or invariant.
+\end{definition}
+
+\begin{definition}[Hiding]
+Let $\mathscr{A}= \langle L, l_0, Acts, V, V_0, C, Inv, E\rangle$ be a $\nSTA$ and $A\in Acts$ is a \emph{hideable} action in $\mathscr{A}$. The hiding operator $\mathscr{A}\backslash\{A\}$ is defined as
+\begin{equation*}
+\mathscr{A}\backslash\{A\}
+=\langle L, l_0, V\backslash \{dA\}, \restrict{V_0}{V\backslash \{dA\}}, C, Acts\backslash\{A\}, Inv, E'\rangle
+\end{equation*}
+where $E'=\{\langle l, acts\backslash\{A\}, g, \restrict{u}{V\backslash \{dA\}}, l'\rangle | \langle l, acts, g, u, l'\rangle\in E\}$.
+\end{definition}
+
+Hiding operation can be also used to remove multiple hideable actions at a time. For example, we introduce the following notation, and it it easy to prove that this notation is well-defined, and satisfies the law of commutation (since all we do in hiding is to remove things from existing terms).
+\[
+    \mathscr{A}\backslash \{A_1,\cdots, A_n\}:=\mathscr{A}\backslash \{A_1\}\backslash\{A_2\}\cdots\backslash \{A_n\}
+\]
+
+% The well-defined definition of hiding operator depends on that we only have the flow-through operation to handle as the merge and replicate operations have been defined as channels. We also suppose that we always perform the merge and replicate operations first and perform the flow-through operation afterwards.
+% Thus when taking the intersection of $V_{1}$ and $V_{2}$, we don't need to worry about whether $V_{h}$, i.e. the intersection, is obtained from replicate, merge or flow-through operations.
+
+\ly{
+Let's consider an simple example in Fig.~\ref{fig:prodsyncandfifo}, where we use \emph{product} and \emph{hiding} operators to combine a \emph{Sync} and a \emph{FIFO1}. In the figure, we shows the combined connector in different stages and its corresponding $\nSTA$ step by step.
+}
+
+\begin{figure}[H]
+    \centering
+    \resizebox{.85\textwidth}{!}{
+        \input{images/channels/product_sync_fifo1}
+    }
+    \caption{\emph{Product} and \emph{Hiding} of \emph{Sync(A,B)} and \emph{FIFO1(B,C)}}
+    \label{fig:prodsyncandfifo}
+\end{figure}
+
+% Next we consider two Reo connectors both consisting of a $StochasticChoice$ channel and a $FIFO1$ channel but produced in a different order. As $StochasticChoice$ channel is a synchronous channel, here we omit the $Ready$ state and the internal action. The two connectors are shown in Fig.~\ref{fig:compsyncfifo}.
+% \begin{figure}
+%     \centering
+%     \begin{tikzpicture}
+%         \ionode{(io1)}{(0.5,0)}{node[below]{A1}}
+%         \ionode{(io2)}{(4.5,0)}{node[below]{C1}}
+%         \ionode{(io3)}{(6.5,0)}{node[below]{A2}}
+%         \ionode{(io4)}{(10.5,0)}{node[below]{C2}}
+%         \mixednode{(m1)}{(2.5,0)}{node[below]{B1}}
+%         \mixednode{(m2)}{(8.5,0)}{node[below]{B2}}
+%         \sync{(io1)}{(m1)}{node[below]{$dist$}}
+%         \fifoe{(m1)}{(io2)}{}
+%         \fifoe{(io3)}{(m2)}{}
+%         \sync{(m2)}{(io4)}{node[below]{$dist$}}
+%     \end{tikzpicture}
+%     \caption{Composition of StochasticChoice and FIFO1 channel.}
+%     \label{fig:compsyncfifo}
+% \end{figure}
+
+% \begin{comment}
+% The products of $\nSTA$ corresponding to these two connectors with different composition orders are shown in Fig.~\ref{fig:prostofifo}.
+% \begin{figure}[htbp]
+% \centering
+% \subfigure[1]{
+% \begin{minipage}{5.5cm}
+% \centering
+% \input{images/channels/product_syncchoice_fifo1}
+% \end{minipage}
+% }
+% %\label{fig:syncchoiceandfifo}
+% \subfigure[2]{
+% \begin{minipage}{5.5cm}
+% \centering
+% \input{images/channels/product_fifo1_syncchoice}
+% \end{minipage}
+% }
+% \caption{Product of StochasticChoice and FIFO1}
+% \label{fig:prostofifo}
+% \end{figure}
+% \end{comment}
+
+% After performing the $product$ and $hiding$ operators, we can see the final result. Although the basic channels are the same, there are some differences between the two final products, which results from different locations where probabilistic behavior happens.
+% In the first Reo connector, data items arriving in $B1\in StochasticChoice.Acts$ are stochastic. Following that, whatever the data item is, it is stored into the buffer of FIFO1 deterministically. Nevertheless, in the second Reo connector, no matter what the data item taken from the buffer is, the output of the connector will totally depend on the parameter $dist$ of $StochasticChoice$ channel.
+% \begin{figure}[htbp]
+% \centering
+% \subfigure[1]{
+% \begin{minipage}{5.5cm}
+% \centering
+
+% \input{images/channels/hide_syncchoice_fifo1}
+% \end{minipage}
+% }
+% %\label{fig:syncchoiceandfifo}
+% \subfigure[2]{
+% \begin{minipage}{5.5cm}
+% \centering
+% \input{images/channels/hide_fifo1_syncchoice}
+% \end{minipage}
+% }
+% \caption{Final Product of StochasticChoice and FIFO1}
+% \end{figure}
+
+% \subsection{Commutative and Associative Law}
+\subsection{Well-definedness of Composition Operators}
+
+To specify the well-definedness of composition operators listed above, here we present the \emph{commutative} law and the \emph{associative} law for them. Before starting, first we introduce the \emph{isomorphism} of $\nSTA$.
+
+
+\begin{definition}[Isomorphism]
+    \label{def:isomorphism}
+    Two $\nSTA$ are \emph{isomorphic} ($\mathscr{A}_1\cong\mathscr{A}_2$, where $\mathscr{A}_{i}=\langle L_{i}, l_{0,i}, Acts_{i}, V_{i}, V_{0,i}, C_{i}, Inv_{i}, E_{i}\rangle$), if the 1-to-1 mappings $f_L:L_1\rightarrow L_2$, $f_V:V_1\rightarrow V_2$, $f_C:C_1\rightarrow C_2$, $f_{act}:Acts_1\rightarrow Acts_2$
+    exist and satisfy:
+    \begin{itemize}
+        \item $f_L(l_{0,1}) = l_{0,2}$, 
+        \item $\forall v\in V_1, V_{0,1}(v) = V_{0,2}(f_V(v))$,
+        \item $\forall l\in L_1, Inv_1(l)$ and $Inv_2(f_L(l))$ can be obtained from each other by variables' replacement specified by $f_V$ and $f_C$,
+        \item $\forall e=\langle l, acts, g , u, l' \rangle \in E_1$, we can find a corresponding exclusive edge $e'\in E_2 = \langle f_L(l), \{f_{act}(a)|a\in acts\}, g', u', f_L(l')\rangle$
+        where $g',u'$ and $g,u$ can be obtained from each other by variables' replacement specified by $f_V$ and $f_C$.
+    \end{itemize}
+\end{definition}
+
+Informally speaking, two $\nSTA$ are isomorphic if they have the same graphical structure and homologous behavior, despite the slight difference of location labels or variable identifiers. The \emph{commutative} and \emph{associative} laws we present in the following are essentially based on the definition of \emph{isomorphism}.
+
+
+% \ly{
+%     Considering the graphical model of Reo, these laws are obvious and clear. For example, suppose there are three nodes $A$, $B$, $C$ and two connectors $conn_1(A,B)$, $conn_2(B,C)$. Joining $conn_2$ to $conn_1$ or $conn_1$ to $conn_2$, intuitively, will lead to exactly the same results. However, to illustrate this from a formal aspect of view, we still need to formalize and prove the law of communtation on its semantics $\nSTA$.
+% }
+% As for all nodes A, B, C, and channels, assume that one connector is the composition of two channels $chan1(A,B)$ and $chan2(B,C)$ and the other connector is the composition of $chan2(B,C)$ and $chan1(A,B)$, the result connectors are totally the same, which is a $chan1$ channel with source end $A$ and sink end $B$ immediately following a $chan2$ channel with source end $B$ and sink end $C$.
+% For the other two composition operations merge and replicate, we specify them as channels. But we can also see the law of commutation is satisfied easily.
+
+
+% However, the commutative law of $\nSTA$ corresponding to $channelname1$ and $channelname2$ is not so explicit as composition of channels.
+\begin{theorem}[Commutative]
+\label{thm:commutative}
+Let $\mathscr{A}_1, \mathscr{A}_2$ be two $\nSTA$, $\mathscr{A}_{1}\bowtie \mathscr{A}_{2}\cong\mathscr{A}_{2}\bowtie \mathscr{A}_{1}$.
+\end{theorem}
+
+% Considering in a similar way, we can easily obtain the law of association for the composition of Reo connectors. For three channels, assume that the first one is $channelname1$ with source end $A$ and sink end $B$, the second one is $channelname2$ with source end $B$ and sink end $C$ and the last is $channelname3$ with source end $C$ and sink end $D$. We can combine the three channels in two different orders. However, in either order, we will always obtain a connector which is $channelname1$ followed by $channelname2$ followed by $channelname3$ with source end $A$, sink end $D$ and two hiding ends $B$,$C$.
+
+% For the other two composition operations merge and replicate, we already specify them as channels. Nevertheless, for three channels, when composing them in either order, the result of replicate is that data items will be replicated into three channels and the result of merge is that data items will be taken from three channels nondeterministically. Thus, the two composition operations merge and replicate also satisfy the law of association.
+
+% As for associative law of $\nSTA$ corresponding to three channels, it can be formulated as follows.
+\begin{theorem}[Associative]
+\label{thm:associative}
+Let $\mathscr{A}_1, \mathscr{A}_2, \mathscr{A}_3$ be three $\nSTA$, ($\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}\cong\mathscr{A}_{1}\bowtie(\mathscr{A}_{2}\bowtie \mathscr{A}_{3})$.
+\end{theorem}
+
+
+From the two theorems above, it's clear that orders make only little difference in composition of $\nSTA$. No matter how we label the identifiers and write the composing expression, finally the connectors we obtain have the same behavior. Similar to the isomorphism of graphs, these laws can be easily proved through a constructive approach.

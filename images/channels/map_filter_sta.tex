@@ -1,0 +1,39 @@
+\begin{tikzpicture}
+    % State: ACK with different content
+    \node[state,    	% layout (defined above)
+    text width=1cm, 	% max text width    
+    anchor=center] (S0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+    \node[state,    	% layout (defined above)
+    text width=1cm, 	% max text width
+    right of=S0,
+    node distance=4cm,    
+    anchor=center] (SL0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+    \node[below of=S0, left of=S0, node distance=0.8cm] {(a)};
+    \node[below of=SL0, node distance=0.8cm] {(b)};
+    
+    % draw the paths and and print some Text below/above the graph
+    \path (S0)  edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A,B}] \\
+            \emph{dB := f(dA)}
+        \end{tabular}
+    } (S0);
+
+    \path (SL0)  edge[loop right] node{
+        \begin{tabular}{c}
+            [\textbf{A,B},\emph{P(dA)}] \\
+            \emph{dB := dA}
+        \end{tabular}
+    } (SL0)
+
+    (SL0) edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A},\emph{!P(dA)}]
+        \end{tabular}
+    } (SL0)
+    ;
+\end{tikzpicture}

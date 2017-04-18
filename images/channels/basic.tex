@@ -1,0 +1,221 @@
+\begin{tikzpicture}
+
+    % ------------------------------- SYNC & LOSSY ---------------------------------
+    % State: ACK with different content
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width    
+    anchor=center] (S0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width
+    right of=S0,
+    node distance=4.5cm,    
+    anchor=center] (SL0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+    \node[below of=S0, node distance=0.8cm] {(a) \sem{Sync(A, B)}};
+    \node[below of=SL0, node distance=0.8cm] {(b) \sem{LossySync(A, B)}};
+    
+    % draw the paths and and print some Text below/above the graph
+    \path (S0)  edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A, B}] \\
+            \emph{dB := dA}
+        \end{tabular}
+    } (S0);
+
+    \path (SL0)  edge[loop right] node{
+        \begin{tabular}{c}
+            [\textbf{A, B}] \\
+            \emph{dB := dA}
+        \end{tabular}
+    } (SL0)
+
+    (SL0) edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A}]
+        \end{tabular}
+    } (SL0)
+    ;
+
+    % ------------------------------- DRAINS ---------------------------------
+
+    % State: ACK with different content
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width
+    right of=SL0,
+    node distance=4.5cm,
+    anchor=center] (SD0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width
+    below of=S0,
+    node distance=1.7cm,    
+    anchor=center] (ASD0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+    \node[below of=SD0, node distance=0.8cm] {(c) \sem{SyncDrain(A,B)}};
+    \node[below of=ASD0, node distance=0.8cm] {(d) \sem{AsyncDrain(A,B)}};
+    
+    % draw the paths and and print some Text below/above the graph
+    \path (SD0)  edge[loop right] node{
+        \begin{tabular}{c}
+            [\textbf{A, B}]
+        \end{tabular}
+    } (SD0);
+
+    \path (ASD0)  edge[loop right] node{
+        \begin{tabular}{c}
+            [\textbf{B}]
+        \end{tabular}
+    } (ASD0)
+
+    (ASD0) edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A}]
+        \end{tabular}
+    } (ASD0)
+    ;
+
+    % ------------------------------- FILT ---------------------------------
+
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width
+    below of=ASD0,
+    node distance=1.7cm,    
+    anchor=center] (F0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+
+    \path (F0)  edge[loop right] node{
+        \begin{tabular}{c}
+            [\textbf{A},\emph{$\lnot$P(dA)}]
+        \end{tabular}
+    } (F0)
+
+    (F0) edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A,B},\emph{P(dA)}] \\
+            \emph{dB := dA}
+        \end{tabular}
+    } (F0)
+    ;
+
+    % ------------------------------- FIFO ---------------------------------
+    \node[state,    	% layout (defined above)
+    text width=1.5cm, 	% max text width
+    below of=SD0,
+    node distance=3.6cm,
+    anchor=center] (ready) 	% posistion relative to the center of the 'box'
+    {\textbf{Full}};
+
+    \node[state, double,   	% layout (defined above)
+    text width=1.5cm, 	% max text width    
+    left of=ready,
+    node distance=4cm,
+    anchor=center] (init) 	% posistion relative to the center of the 'box'
+    {\textbf{Empty}};
+
+    \node[below of=F0, node distance=.8cm] {(e) \sem{Filter\langle P\rangle(A,B))}};
+    \node[below of=init, node distance=1.6cm,xshift=2cm] {(f) \sem{FIFO1(A,B)}};
+    
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (ready)   edge[bend left, ->]
+            node[below] {[\textbf{B}, $t > 0$] \emph{dB := buf}} 
+        (init)
+
+        (init)  edge[bend left, ->]
+            node[above] {[\textbf{A}] \emph{buf := dA, t := 0}} 
+        (ready);
+
+    % replicator
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width
+    below of=F0, 
+    node distance=1.8cm,   
+    anchor=center] (REP0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+    % draw the paths and and print some Text below/above the graph
+    \path (REP0)  edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A, B, C}] \\
+			\emph{dB := dA, dC := dA}
+        \end{tabular}
+    } (REP0);
+
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width
+    below of=REP0,
+    node distance=1.8cm,    
+    anchor=center] (MRG0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+
+    \path (MRG0)  edge[loop right] node{
+        \begin{tabular}{c}
+            [\textbf{B, C}] \\
+            \emph{dC := dB}
+        \end{tabular}
+    } (MRG0)
+
+    (MRG0) edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A, C}] \\
+            \emph{dC := dA}
+        \end{tabular}
+    } (MRG0)
+    ;
+
+    \node[below of=REP0, node distance=0.8cm] {(g) \sem{Replicator(A,B,C)}};
+    \node[below of=MRG0, node distance=0.8cm] {(h) \sem{Merger(A,B,C)}};
+
+    % State: ACK with different content
+    \node[state, double,   	% layout (defined above)
+    text width=1cm, 	% max text width    
+    below of=MRG0,
+    node distance=1.8cm,
+    anchor=center] (MAP0) 	% posistion relative to the center of the 'box'
+    {\textbf{S0}};
+    
+    % draw the paths and and print some Text below/above the graph
+    \path (MAP0)  edge[loop left] node{
+        \begin{tabular}{c}
+            [\textbf{A,B}] \\
+            \emph{dB := f(dA)}
+        \end{tabular}
+    } (MAP0);
+
+    \node[below of=MAP0, node distance=0.8cm] {(i) \sem{Map\langle f\rangle(A,B)}};
+
+    % stochastic choice
+    \node[state, double,   	% layout (defined above)
+    below of=init,
+    node distance=4cm,
+    text width=1.5cm, 	% max text width    
+    anchor=center] (sinit) 	% posistion relative to the center of the 'box'
+    {\textbf{Init}};
+    
+    \node[state,    	% layout (defined above)
+    text width=1.5cm, 	% max text width
+    right of=sinit,
+    node distance=4cm,
+    anchor=center] (sready) 	% posistion relative to the center of the 'box'
+    {\textbf{Ready}};
+
+    \node[below of=sinit, node distance=1.8cm, xshift=1.75cm] {(j) \sem{StochasticChoice\langle dist\rangle(A,B)}};
+    
+    
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (sinit)   edge[bend right, ->] 
+            node[below] {[\textbf{i}] \emph{buf := dist()}} 
+        (sready)
+
+        (sready)  edge[bend right, ->]
+            node[above] {[\textbf{A,B}] \emph{dB := buf}} 
+        (sinit);
+
+\end{tikzpicture}

@@ -1,0 +1,66 @@
+\documentclass{llncs}
+
+% \usepackage[a4paper, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+
+% use float package to provide supprot for position option H (in figure env)
+\usepackage{float}
+\usepackage{afterpage}
+
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{reotex}
+\usepackage{subfigure}
+\input{images/tikzstyles}
+
+\newcommand{\sem}[1]{$[\![{#1}]\!]$}
+% todo: what is the proper name of the new model ?
+\newcommand{\nSTA}{\mbox{STA}_r}
+
+\begin{document}
+
+\begin{example}[Embedded system]
+The embedded system comprises a processor, sensors and an actuator.
+The main processor, connected to ports \emph{$M_{in}$} and \emph{$M_{out}$},
+reads data coming from sensors, and passes instructions to the actuator
+through port \emph{Input} and \emph{Output}, respectively.
+The system fails to get an input only when no data flows
+    through each probabilistic filter.
+A complete round, which starts when a data comes in
+and stops when the output data is written successfully,
+should be accomplished in a certain period of time,
+otherwise the system sends out a timeout signal.
+
+\begin{figure}[H]
+    \centering
+    \input{images/embedded}
+    \caption{Embedded System}
+    \label{fig:em}
+\end{figure}
+
+A \emph{probabilistic filter}, \textbf{PF} in short,
+    drops data with a certain probability, i.e. $1 - p$; while
+\textbf{RT} with time bound $t_{max}$,
+which stands for \emph{reset timer}, can be reset.
+
+\begin{figure}[H]
+    \centering
+    \input{images/pf_rt}
+    \caption{Probablistic Filter (left) and Reset Timer (right)}
+    \label{fig:em}
+\end{figure}
+
+There are 8 locations in the $\nSTA$ of the embedded system,
+consisting of triples which symbolizes the configuration of
+    two probabilistic filters and the reset timer.
+The $\nSTA$ is represented by \emph{JANI};
+elements are ommited except locations and edges.
+
+\lstinputlisting[language=Java]{em.jani}
+
+\end{example}
+\end{document}

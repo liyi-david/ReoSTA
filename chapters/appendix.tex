@@ -1,0 +1,222 @@
+\clearpage
+\section*{Appendix}
+\subsection*{A. Proof Sketch of Commutative and Associative Laws}
+
+\noindent\emph{Thoerem} \ref{thm:associative}. (\emph{Associative})
+Let $\mathscr{A}_1, \mathscr{A}_2, \mathscr{A}_3$ be three $\nSTA$, ($\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}\cong\mathscr{A}_{1}\bowtie(\mathscr{A}_{2}\bowtie \mathscr{A}_{3})$.
+
+\begin{proof}
+We provide the sketch of this proof in a constructive style. Suppose $\mathscr{A}_i=\langle L_{i}, l_{0,i}, Acts_{i}, V_{i}, V_{0,i}, C_{i}, Inv_{i}, E_{i}\rangle$. First we calculate the two result $\nSTA$, the first one $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}$ is denoted by,
+\begin{eqnarray*}
+    & \langle
+        (L_1\times L_2)\times L_3, ((l_{0,1}, l_{0,2}), l_{0,3}),
+        (Acts_1\cup Acts_2)\cup Acts_3, \\
+        & (V_1\cup V_2)\cup V_3,
+        V_0',
+        (C_1\cup C_2)\cup V_3,
+        Inv', E'
+    \rangle
+\end{eqnarray*}
+Similarly, the other $\nSTA$ $\mathscr{A}_{1}\bowtie(\mathscr{A}_{2}\bowtie \mathscr{A}_{3})$ is,
+\begin{eqnarray*}
+    & \langle
+        L_1\times (L_2\times L_3), (l_{0,1}, (l_{0,2}, l_{0,3})),
+        Acts_1\cup(Acts_2\cup Acts_3), \\
+        & V_1\cup(V_2\cup V_3),
+        V_0'',
+        C_1\cup (C_2\cup V_3),
+        Inv'', E''
+    \rangle
+\end{eqnarray*}
+As mentioned in Definition.~\ref{def:isomorphism}, we need to construct the four \emph{1-to-1} mapping, and prove that these mapping satisfies the certain constraint. Now let's define the mapping functions first.
+
+\begin{itemize}
+    \item $f_L:(L_1\times L_2)\times L_3\rightarrow L_1\times (L_2\times L_3)$, and $f_L(((l_1,l_2), l_3))=(l_1,(l_2,l_3))$. It is easy to prove that $f_L$ is a bijection,
+    \item Since the \emph{union} operation on sets is associative, we have $(V_1\cup V_2)\cup V_3=V_1\cup(V_2\cup V_3)$. And $f_V$ is natually defined as the identity function $\operatorname{id}_{V_1\cup V_2\cup V_3}$,
+    \item Similarly, we use $\operatorname{id}_{C_1\cup C_2\cup C_3}$ as $f_C$, and $\operatorname{id}_{Acts_1\cup Acts_2\cup Acts_3}$ as $f_{act}$.
+\end{itemize}
+
+With the definition of mappings provided, we show why these functions satisfy the requirement in Definition.~\ref{def:isomorphism}.
+
+\begin{enumerate}
+    \item $f_L(((l_{0,1}, l_{0,2}), l_{0,3})) = (l_{0,1}, (l_{0,2}, l_{0,3}))$. This can be directly derived from its definition,
+    \item Suppose $\mathscr{A}_i\bowtie\mathscr{A}_j$ is denoted by $\mathscr{A}_{i\bowtie j}$. According to the definition,
+        \begin{displaymath}
+            V_0'(v)=
+            \left\{
+                \begin{array}{lr}
+                    V_{0,1}(v), v\in V_1\backslash(V_2\cup V_3), \\
+                    V_{0,2\bowtie 3}(v), v\in V_2\cup V_3
+                \end{array}
+            \right.
+            \mbox{, and }
+            V_0''(v)=
+            \left\{
+                \begin{array}{lr}
+                    V_{0,1\bowtie 2}(v), v\in (V_1\cup V_2)\backslash V_3, \\
+                    V_{0,3}(v), otherwise
+                \end{array}
+            \right.
+        \end{displaymath}
+        Then we unfold $V_{0,2\bowtie 3}$ and $V_{0,1\bowtie 2}$, and find that the two functions are exactly the same.
+        \begin{displaymath}
+            V_0'(v)=
+            V_0''(v)=
+            \left\{
+                \begin{array}{lr}
+                    V_{0,1}(v), v\in V_1\backslash (V_2\cup V_3), \\
+                    V_{0,2}(v), v\in V_2\backslash V_3, \\
+                    V_{0,3}(v), otherwise
+                \end{array}
+            \right.
+        \end{displaymath}
+    \item Variables and clock variables in the two $\nSTA$ are also the same, which lead to a conclusion that variable replacements are even not required, and they share the same invariants. 
+    \item For edges, as shown in the original definition of \emph{product} operator, all the edges in $E'$ are added following the three rules. In a nutshell, there are two types of edges, \emph{synchronous} or \emph{asynchronous}. In $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}$, an \emph{asynchronous} edge either an edge of $\mathscr{A}_{3}$, or an edge of $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})$. And a \emph{synchronous} edge only comes from combining an edge of $\mathscr{A}_{3}$ and an edge of $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})$. Similar to the last case, when you try to unfold it and recover its original form, you will find that $E'$ and $E''$ are almost the same, except for the different location identifiers.
+\end{enumerate}
+\end{proof}
+
+The \emph{commutative} law can be also simply proved using the similar steps.
+% \noindent\emph{Theorem \ref{thm:commutative}.} Let $\mathscr{A}_{1}$ and $\mathscr{A}_{2}$ be $\nSTA$ for two Reo primitive channels. Assume that $\forall i={1,2}$, $\mathscr{A}_{i}$ is a triple $\mathscr{A}_{i}=\langle L_{i}, l_{0,i}, V_{i}, V_{0,i}, C_{i}, Acts_{i}, Inv_{i}, E_{i}\rangle$,
+% then the product $\mathscr{A}_{1}\bowtie \mathscr{A}_{2}$  is equivalent to $\mathscr{A}_{2}\bowtie \mathscr{A}_{1}$.
+
+% \begin{proof}
+% Consider two stochastic timed automata for Reo $\mathscr{A}_{1}$ and $\mathscr{A}_{2}$. After performing the \emph{product} operator, we can see that the product $\mathscr{A}=\mathscr{A}_{1}\bowtie \mathscr{A}_{2}=\langle L, l_0, V, V_0, C, Acts, Inv, E\rangle$ are defined as follows:
+
+% \begin{itemize}
+%   \item $L = L_{1}\times L_{2}$, $l_0 = l_{0,1}\times l_{0,2}$
+%   \item $V = V_{1}\cup V_{2}$, $C = C_{1}\cup C_{2}$, $Acts = Acts_{1}\cup Acts_{2}$
+%   \item $V_0(v)$ is equal to $V_{0,1}(v)$ if $v\in V_1\backslash V_2$, or $V_{0,2}(v)$ otherwise.
+%   \item $Inv(l_1,l_2)(ev)=Inv_1(l_1)(\restrict{ev}{V_1\cup C_1})\land Inv_2(l_2)(\restrict{ev}{V_2\cup C_2})$.
+%   \item $E$ is obtained through the following rule:
+%         \begin{equation}
+%             \frac{l_{1}\xrightarrow{acts_{1},g_{1},u_{1}}_{E_1} l_{1}', l_{2}\xrightarrow{acts_{2},g_{2},u_{2}}_{E_2} l_{2}',acts_{1}\cap Acts_{2}=acts_{2}\cap Acts_{1}}
+%         {\langle l_{1},l_{2}\rangle\xrightarrow{acts_{1}\cup acts_{2},g, u}_E\langle l_{1}',l_{2}'\rangle}
+%         \end{equation}
+%         where the guard formula $g$ is the logical \texttt{and} of $g_1$ and $g_2$ and $u$ is obtained according to the steps shown before. Assume that $u_1'$ and $u_2'$ are the resolved assignment statements in which the replacements have been done, we have
+%         \begin{displaymath}
+%             u(v)=\left\{
+%             \begin{array}{lr}
+%                 u_1'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_1$}, \\
+%                 u_2'(v) & otherwise
+%             \end{array}
+%             \right.
+%         \end{displaymath}
+% \end{itemize}
+
+% Similarly, the product $\mathscr{A'}=\mathscr{A}_{2}\bowtie \mathscr{A}_{1}=\langle L', l_0', V', V_0', C', Acts', Inv', E'\rangle$ are presented as follows:
+% \begin{itemize}
+%   \item $L' = L_{2}\times L_{1}$, $l_0' = l_{0,2}\times l_{0,1}$
+%   \item $V' = V_{2}\cup V_{1}$, $C' = C_{2}\cup C_{1}$, $Acts' = Acts_{2}\cup Acts_{1}$
+%   \item $V_0'(v)$ is equal to $V_{0,2}(v)$ if $v\in V_2\backslash V_1$, or $V_{0,1}(v)$ otherwise.
+%   \item $Inv'(l_2,l_1)(ev)=Inv_2(l_2)(\restrict{ev}{V_2\cup C_2})\land Inv_1(l_1)(\restrict{ev}{V_1\cup C_1})$.
+%   \item $E'$ is a finite set of edges obtained through the rule which is shown below:
+%         \begin{equation}
+%             \frac{l_{1}\xrightarrow{acts_{1},g_{1},u_{1}}_{E_1} l_{1}', l_{2}\xrightarrow{acts_{2},g_{2},u_{2}}_{E_2} l_{2}', acts_{1}\cap Acts_{2}=acts_{2}\cap Acts_{1}}
+%         {\langle l_{2},l_{1}\rangle\xrightarrow{acts_{1}\cup acts_{2},g', u'}_E'\langle l_{2}',l_{1}'\rangle}
+%         \end{equation}
+%         where the guard formula $g'$ is the logical \texttt{and} of $g_2$ and $g_1$ and $u'$ is obtained according to the steps shown before. Assume that $u_1'$ and $u_2'$ are the resolved assignment statements in which the replacements have been done, we have
+%         \begin{displaymath}
+%             u'(v)=\left\{
+%             \begin{array}{lr}
+%                 u_2'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_2$}, \\
+%                 u_1'(v) & otherwise
+%             \end{array}
+%             \right.
+%         \end{displaymath}
+% \end{itemize}
+
+% The set operations such as union and intersection satisfy the law of commutation. According to the steps for replacements, it is easy to see the resolved assignment statements are totally the same which makes the updates $u=u'$ assured. On the basis of $\forall v\in V_1\cap V_2, V_{0,1}(v) = V_{0,2}(v)$ in the definition of $compatible$, the initialization $V = V'$ can be deduced. Besides, we can form a one-to-one mapping from $\langle l_{1},l_{2}\rangle$ to $\langle l_{2},l_{1}\rangle$.  Thus, we have established two equivalent stochastic timed automata for Reo, i.e. $\mathscr{A}=\mathscr{A'}$.
+% \end{proof}
+
+% \noindent\emph{Theorem \ref{thm:associative}.} Let $\mathscr{A}_{1}$, $\mathscr{A}_{2}$ and $\mathscr{A}_{3}$ be $\nSTA$ for three Reo primitive channels. Assume that $\forall i={1,2,3},$ $\mathscr{A}_{i}$ is a triple $\mathscr{A}_{i}=\langle L_{i}, l_{0,i}, V_{i}, V_{0,i}, C_{i}, Acts_{i}, Inv_{i}, E_{i}\rangle$,
+% then the product ($\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}$ is equivalent to $\mathscr{A}_{1}\bowtie(\mathscr{A}_{2}\bowtie \mathscr{A}_{3})$.
+
+% \begin{proof}
+% Consider three stochastic timed automata for Reo $\mathscr{A}_{1}$, $\mathscr{A}_{2}$ and $\mathscr{A}_{3}$. After performing the \emph{product} operator in the first order, the product $\mathscr{A}=(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}=\langle L, l_0, V, V_0, C, Acts, Inv, E\rangle$ are defined as follows:
+
+% \begin{itemize}
+%   \item $L = L_{1}\times L_{2}\times L_{3}$, $l_0 = l_{0,1}\times l_{0,2}\times l_{0,3}$
+%   \item $V = V_{1}\cup V_{2}\cup V_{3}$, $C = C_{1}\cup C_{2}\cup C_{3}$, $Acts = Acts_{1}\cup Acts_{2}\cup Acts_{3}$
+%   \item $V_0$ is an initialize function obtained in the following rule:
+%         \begin{displaymath}
+%             V_0(v)=\left\{
+%             \begin{array}{lr}
+%                 V_{0,1}(v) & V_1\backslash (V_2\cup V_3), \\
+%                 V_{0,2}(v) & V_2\backslash (V_1\cup V_3), \\
+%                 V_{0,3}(v) & V_3\backslash (V_1\cup V_2), \\
+%                 V_{0,2}(v)=V_{0,1}(v) &  V_1\cap V_2,     \\
+%                 V_{0,3}(v)=V_{0,1}(v) &  V_1\cap V_3,     \\ 
+%                 V_{0,3}(v)=V_{0,2}(v) &  V_2\cap V_3,     \\ 
+%                 V_{0,1}(v)=V_{0,2}(v)=V_{0,3}(v) &  V_1\cap V_2\cap V_3, \\ 
+%             \end{array}
+%             \right.
+%         \end{displaymath}
+
+%   \item $Inv(l_1,l_2,l_3)(ev)=Inv_1(l_1)(\restrict{ev}{V_1\cup C_1})\land Inv_2(l_2)(\restrict{ev}{V_2\cup C_2})\land Inv_3(l_3)\\
+%   (\restrict{ev}{V_3\cup C_3})$.
+%   \item $E$ is obtained through the following rule:
+%         \begin{equation}
+%         \langle l_{1},l_{2},l_{3}\rangle\xrightarrow{acts_{1}\cup acts_{2}\cup acts_{3}, g, u}_E\langle l_{1}',l_{2}',l_{3}'\rangle
+%         \end{equation}
+%         with the premise $l_{1}\xrightarrow{acts_{1},g_{1},Upd_{1}} l_{1}', l_{2}\xrightarrow{acts_{2},g_{2},Upd_{2}} l_{2}', l_{3}\xrightarrow{acts_{3},g_{3},Upd_{3}} l_{3}',\\
+%         acts_{1}\cap Acts_{2}=acts_{2}\cap Acts_{1}\neq \varnothing,
+%         acts_{2}\cap Acts_{3}=acts_{3}\cap Acts_{2}\neq \varnothing$.
+%         The guard formula $g$ is the logical \texttt{and} of $g_1$, $g_2$ and $g_3$ and $u$ is obtained according to the steps shown before. Assume that $u_1'$, $u_2'$ and $u_3'$ are the resolved assignment statements in which the replacements have been done, we have
+%         \begin{displaymath}
+%             u(v)=\left\{
+%             \begin{array}{lr}
+%                 u_1'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_1$}, \\
+%                 u_2'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_2$}, \\
+%                 u_3'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_3$}, \\
+%             \end{array}
+%             \right.
+%         \end{displaymath}
+% \end{itemize}
+
+% Homologously, the product $\mathscr{A'}=\mathscr{A}_{1}\bowtie (\mathscr{A}_{2}\bowtie \mathscr{A}_{3})=\langle L', l_0', V', V_0', C', Acts', \\
+% Inv', E'\rangle$ are presented as:
+% \begin{itemize}
+%   \item $L = L_{1}\times (L_{2}\times L_{3})$, $l_0 = l_{0,1}\times (l_{0,2}\times l_{0,3})$
+%   \item $V = V_{1}\cup (V_{2}\cup V_{3})$, $C = C_{1}\cup (C_{2}\cup C_{3})$, $Acts = Acts_{1}\cup (Acts_{2}\cup Acts_{3})$
+%   \item $V_0$ is an initialize function obtained on the basis of the definition of \emph{compatible} in the following rule:
+%         \begin{displaymath}
+%             V_0(v)=\left\{
+%             \begin{array}{lr}
+%                 V_{0,1}(v) & V_1\backslash (V_2\cup V_3), \\
+%                 V_{0,2}(v) & V_2\backslash (V_1\cup V_3), \\
+%                 V_{0,3}(v) & V_3\backslash (V_1\cup V_2), \\
+%                 V_{0,1}(v)=V_{0,2}(v) &  V_1\cap V_2,     \\
+%                 V_{0,1}(v)=V_{0,3}(v) &  V_1\cap V_3,     \\
+%                 V_{0,2}(v)=V_{0,3}(v) &  V_2\cap V_3,     \\
+%                 V_{0,1}(v)=V_{0,2}(v)=V_{0,3}(v) &  V_1\cap V_2\cap V_3, \\
+%             \end{array}
+%             \right.
+%         \end{displaymath}
+%   \item $Inv(l_1,l_2,l_3)(ev)=Inv_1(l_1)(\restrict{ev}{V_1\cup C_1})\land (Inv_2(l_2)(\restrict{ev}{V_2\cup C_2})\land Inv_3(l_3)\\
+%   (\restrict{ev}{V_3\cup C_3})$).
+%   \item $E$ is obtained through the following rule:
+%         \begin{equation}
+%         \langle l_{1},l_{2},l_{3}\rangle\xrightarrow{acts_{1}\cup acts_{2}\cup acts_{3}, g, u}_E\langle l_{1}',l_{2}',l_{3}'\rangle
+%         \end{equation}
+%         with the premise $l_{1}\xrightarrow{acts_{1},g_{1},Upd_{1}} l_{1}', l_{2}\xrightarrow{acts_{2},g_{2},Upd_{2}} l_{2}', l_{3}\xrightarrow{acts_{3},g_{3},Upd_{3}} l_{3}',\\
+%         acts_{1}\cap Acts_{2}=acts_{2}\cap Acts_{1}\neq \varnothing,
+%         acts_{2}\cap Acts_{3}=acts_{3}\cap Acts_{2}\neq \varnothing$.
+%         The guard formula $g$ is the logical \texttt{and} of $g_1$, $g_2$ and $g_3$ and $u$ is obtained according to the steps shown before. Assume that $u_1'$, $u_2'$ and $u_3'$ are the resolved assignment statements in which the replacements have been done, we have
+%         \begin{displaymath}
+%             u(v)=\left\{
+%             \begin{array}{lr}
+%                 u_1'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_1$}, \\
+%                 u_2'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_2$}, \\
+%                 u_3'(v) & \hspace{1cm}\mbox{$v$ is assigned in $v_3$}, \\
+%             \end{array}
+%             \right.
+%         \end{displaymath}
+% \end{itemize}
+
+% Similarly, after exploiting that the set operations including union and intersection satisfy the law of association, we can come to the conclusion that the two stochastic timed automata for Reo are identical. Thus, the law of association for stochastic timed automata for Reo is proven out.
+% \end{proof}
+
+
+\subsection*{B. Semantics of the Embedded Control System}
+
+\input{em.jani}

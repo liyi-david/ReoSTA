@@ -1,0 +1,45 @@
+\documentclass{llncs}
+
+% \usepackage[a4paper, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+
+% use float package to provide supprot for position option H (in figure env)
+\usepackage{float}
+\usepackage{afterpage}
+
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{reotex}
+\usepackage{subfigure}
+\input{images/tikzstyles}
+
+\newcommand{\sem}[1]{$[\![{#1}]\!]$}
+% todo: what is the proper name of the new model ?
+\newcommand{\nSTA}{\mbox{STA}_r}
+
+\begin{document}
+
+\begin{example}[Embedded system]
+The embedded system comprises a processor, a group of sensors and actuators.
+The main processor, symbolized by component \emph{M}, reads data coming from sensors, and passes instructions to actuators
+through \emph{I} and \emph{O}, respectively.
+As sensors may fail to generate data, represented by a probablistic passing component,
+\emph{triple modular redundancy} is applied --
+if more than one in three is unavailable, the system fails to read data in this cycle.
+Similarly, it is sufficient that one of the two actuators works functionally.
+A complete round should be accomplished within certain time bound,
+which starts when a data comes in, and stops when at least one output is written successfully;
+otherwise the system sends out a failure signal.
+
+\begin{figure}[H]
+    \centering
+    \input{images/embedded}
+    \caption{Embedded system}
+    \label{fig:em}
+\end{figure}
+	
+\end{example}
+\end{document}

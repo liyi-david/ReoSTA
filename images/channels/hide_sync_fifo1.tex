@@ -1,0 +1,41 @@
+\begin{tikzpicture}
+
+    % draw the connector
+    \node (bfp) at (-4.25, 1.5) {\tt Before Hiding};
+    \node (bfp) at (-4.25, 0.1) {\tt After Hiding};
+
+    \ionode{(Ad)}{(-6, 0.8)}{node[left] {A}};
+    \ionode{(Bd)}{(-4.25, 0.8)}{node[above=0.1cm] {B}};
+    \ionode{(Cd)}{(-2.5, 0.8)}{node[right] {C}};
+    \sync{(Ad)}{(Bd)}{}
+    \fifoe{(Bd)}{(Cd)}{}
+
+    \ionode{(A)}{(-6, -0.3)}{node[left] {A}};
+    \ionode{(B)}{(-4.25, -0.3)}{};
+    \ionode{(C)}{(-2.5, -0.3)}{node[right] {C}};
+    \sync{(A)}{(B)}{}
+    \fifoe{(B)}{(C)}{}
+
+    % State: ACK with different content
+    \node[state, double,   	% layout (defined above)
+    text width=1.9cm, 	% max text width
+    anchor=center] (init) at (0,0.5)	% posistion relative to the center of the 'box'
+    {\textbf{S0, Empty}};
+
+    \node[state,    	% layout (defined above)
+    text width=1.9cm, 	% max text width
+    right of=init,
+    node distance=3.5cm,
+    anchor=center] (ready) 	% posistion relative to the center of the 'box'
+    {\textbf{S0, Full}};
+
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (ready)   edge[bend left, ->]
+            node[below] {[\textbf{C}, $t > 0$] \emph{dC := buf}}
+        (init)
+
+        (init)  edge[bend left, ->]
+            node[above] {[\textbf{A}] \emph{buf := dA, t := 0}}
+        (ready);
+\end{tikzpicture}

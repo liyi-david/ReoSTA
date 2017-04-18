@@ -1,0 +1,93 @@
+
+\begin{tikzpicture}
+    % State: ACK with different content
+    \node[state, double,   	% layout (defined above)
+    text width=1.5cm, 	% max text width    
+    anchor=center] (init) 	% posistion relative to the center of the 'box'
+    {\textbf{Init}};
+    
+    \node[state,    	% layout (defined above)
+    text width=1.5cm, 	% max text width
+    right of=init,
+    node distance=6.5cm,
+    anchor=center] (pending) 	% posistion relative to the center of the 'box'
+    {\textbf{Pending}\\$t\leq delay$};
+    
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (init)      edge[in=176,out=4, ->] 
+            node[above] {[\textbf{A}] \emph{t := 0}} 
+        (pending)
+
+        (init)      edge[->, in=184, out=-4] 
+            node[below] {[\textbf{A,T}] \emph{t := 0, delay := dT}} 
+        (pending)
+
+        (init)      edge[loop, ->,in=120,out=60, looseness=8]
+            node[above] {[\textbf{T}] $delay:=dT$}
+        (init)
+
+        (pending)   edge[bend left=60, ->]
+            node[below] {[\textbf{B}, $t= delay$] \emph{dB := TIMEOUT}}
+        (init)
+
+        (pending)   edge[bend left, ->]
+            node[below] {[\textbf{T}] \emph{delay := dT}}
+        (init)
+
+        (pending)   edge[bend right=20, ->]
+            node[above] {[\textbf{i}, \emph{t = delay}]}
+        (init)
+
+        (pending)      edge[loop, ->,in=120,out=60, looseness=8]
+            node[above] {
+                \begin{tabular}{c}
+                    [\textbf{A,B,T}, \emph{t = delay}] \\
+                    \emph{delay := dT} \\
+                    \emph{t := 0} \\
+                    \emph{dB := TIMEOUT}
+                \end{tabular}
+            }
+        (pending)
+
+        (pending)      edge[loop, ->,in=5,out=35, looseness=6]
+            node[right, yshift=0.2cm] {
+                \begin{tabular}{c}
+                    [\textbf{A,T}] \\
+                    \emph{delay := dT} \\
+                    \emph{t := 0}
+                \end{tabular}
+            }
+        (pending)
+
+        (pending)      edge[loop, ->,in=-5,out=-35, looseness=6]
+            node[right, yshift=-0.2cm] {
+                \begin{tabular}{c}
+                    [\textbf{A}, \emph{t = delay}] \\
+                    \emph{t := 0}
+                \end{tabular}
+            }
+        (pending)
+
+        (pending)      edge[->, bend right=50]
+            node[above] {
+                \begin{tabular}{c}
+                    [\textbf{B,T}, \emph{t = delay}] \\
+                    \emph{delay := dT} \\
+                    \emph{dB := TIMEOUT}
+                \end{tabular}
+            }
+        (init)
+
+        (pending) edge[loop,->,in=-60,out=-120, looseness=8]
+            node [below, xshift=1cm] {
+                \begin{tabular}{c}
+                    [\textbf{A,B}, \emph{t = delay}] \\
+                    \emph{t := 0} \\
+                    \emph{dB := TIMEOUT}
+                \end{tabular}
+            }
+        (pending)
+        ;
+        
+\end{tikzpicture}

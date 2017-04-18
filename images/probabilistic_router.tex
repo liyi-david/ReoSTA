@@ -1,0 +1,28 @@
+\begin{tikzpicture}
+    % State: ACK with different content
+    \node[state, double,   	% layout (defined above)
+    text width=1.5cm, 	% max text width
+    anchor=center] (init) 	% posistion relative to the center of the 'box'
+    {\textbf{Init}};
+
+    \node[state,    	% layout (defined above)
+    text width=1.5cm, 	% max text width
+    right of=init,
+    node distance=6cm,
+    anchor=center] (ready) 	% posistion relative to the center of the 'box'
+    {\textbf{Ready}};
+
+    % draw the paths and and print some Text below/above the graph
+    \path
+        (init)   edge[->]
+            node[below] {[\textbf{i}] \emph{buf := }$\operatorname{B}$\emph{(1,0.5)}}
+        (ready)
+
+        (ready)  edge[bend left=30, ->]
+            node[below] {[\textbf{A,F}, \emph{buf = 0}] \emph{dE := dA}}
+        (init)
+
+        (ready)  edge[bend right=30, ->]
+            node[above] {[\textbf{A,E}, \emph{buf = 1}] \emph{dF := dA}}
+        (init);
+\end{tikzpicture}

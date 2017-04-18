@@ -1,0 +1,47 @@
+\begin{tikzpicture}
+    % part 1. router
+    \node (note) at (4,2.5) {\small
+        ($dist_0$) follows a binomial distribution $\operatorname{B}(1,0.5)$
+    };
+
+    \node (note1) at (1.6, -1.4) {\small (a) Router};
+    \node (note2) at (6.5, -1.4) {\small (b) Probabilistic Router};
+
+    \ionode{(in)}{(0, 0)}{node[left] {A}}
+    \ionode{(outup)}{(3, 0.6)}{node[right] {E}}
+    \ionode{(outdown)}{(3, -0.6)}{node[right] {F}}
+    \mixednode{(mid)}{(1.5, 0)}{node[right] {C}}
+    \mixednode{(wayup)}{(1.5, 0.6)}{node[above] {B}}
+    \mixednode{(waydown)}{(1.5, -0.6)}{node[below] {D}}
+
+    \lossysync{(in)}{(wayup)}{}
+    \lossysync{(in)}{(waydown)}{}
+    \syncdrain{(in)}{(mid)}{}
+    \sync{(wayup)}{(mid)}{}
+    \sync{(waydown)}{(mid)}{}
+
+    \sync{(wayup)}{(outup)}{}
+    \sync{(waydown)}{(outdown)}{}
+
+    \ionode{(pin)}{(5, 0)}{node[left] {A}}
+    \ionode{(poutup)}{(8, 0.6)}{node[right] {E}}
+    \ionode{(poutdown)}{(8, -0.6)}{node[right] {F}}
+    \mixednode{(pmid)}{(6.5, 0)}{node[right] {C}}
+    \mixednode{(pwayup)}{(6.5, 0.6)}{node[above right] {B}}
+    \mixednode{(pmap1)}{(5, 1.2)}{node [left] {A'}}
+    \mixednode{(pmap2)}{(6.5, 1.8)}{node [right] {B'}}
+    \mixednode{(pwaydown)}{(6.5, -0.6)}{node[below] {D}}
+
+    \choice{(pin)}{(pmap1)}{node [left] {$dist_0$}}
+    \filter{(pmap1)}{(pmap2)}{node [above left] {x=1?}}
+    \syncdrain{(pmap2)}{(pwayup)}{}
+
+    \lossysync{(pin)}{(pwayup)}{}
+    \lossysync{(pin)}{(pwaydown)}{}
+    \syncdrain{(pin)}{(pmid)}{}
+    \sync{(pwayup)}{(pmid)}{}
+    \sync{(pwaydown)}{(pmid)}{}
+
+    \sync{(pwayup)}{(poutup)}{}
+    \sync{(pwaydown)}{(poutdown)}{}
+\end{tikzpicture}
