@@ -1,4 +1,4 @@
-all: test
+all: paper
 
 paper:
 	-xelatex paper.tex
