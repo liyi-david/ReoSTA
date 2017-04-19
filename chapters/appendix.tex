@@ -1,6 +1,6 @@
 \clearpage
 \section*{Appendix}
-\subsection*{A. Proof Sketch of Commutative and Associative Laws}
+\subsection*{A. Proof Sketch of the Associative Law}
 
 \noindent\emph{Thoerem} \ref{thm:associative}. (\emph{Associative})
 Let $\mathscr{A}_1, \mathscr{A}_2, \mathscr{A}_3$ be three $\nSTA$, ($\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}\cong\mathscr{A}_{1}\bowtie(\mathscr{A}_{2}\bowtie \mathscr{A}_{3})$.
@@ -28,15 +28,15 @@ Similarly, the other $\nSTA$ $\mathscr{A}_{1}\bowtie(\mathscr{A}_{2}\bowtie \mat
         Inv'', E''
     \rangle
 \end{eqnarray*}
-As mentioned in Definition.~\ref{def:isomorphism}, we need to construct the four \emph{1-to-1} mapping, and prove that these mapping satisfies the certain constraint. Now let's define the mapping functions first.
+As mentioned in Definition.~\ref{def:isomorphism}, we need to construct the four \emph{1-to-1} mapping functions, and prove that these mapping functions satisfy certain constraints. Now we define the mapping functions first.
 
 \begin{itemize}
     \item $f_L:(L_1\times L_2)\times L_3\rightarrow L_1\times (L_2\times L_3)$, and $f_L(((l_1,l_2), l_3))=(l_1,(l_2,l_3))$. It is easy to prove that $f_L$ is a bijection,
-    \item Since the \emph{union} operation on sets is associative, we have $(V_1\cup V_2)\cup V_3=V_1\cup(V_2\cup V_3)$. And $f_V$ is natually defined as the identity function $\operatorname{id}_{V_1\cup V_2\cup V_3}$,
+    \item Since the \emph{union} operation on sets is associative, we have $(V_1\cup V_2)\cup V_3=V_1\cup(V_2\cup V_3)$. And $f_V$ is naturally defined as the identity function $\operatorname{id}_{V_1\cup V_2\cup V_3}$,
     \item Similarly, we use $\operatorname{id}_{C_1\cup C_2\cup C_3}$ as $f_C$, and $\operatorname{id}_{Acts_1\cup Acts_2\cup Acts_3}$ as $f_{act}$.
 \end{itemize}
 
-With the definition of mappings provided, we show why these functions satisfy the requirement in Definition.~\ref{def:isomorphism}.
+With the definition of these mapping functions provided, we show why these functions satisfy the requirements in Definition.~\ref{def:isomorphism}.
 
 \begin{enumerate}
     \item $f_L(((l_{0,1}, l_{0,2}), l_{0,3})) = (l_{0,1}, (l_{0,2}, l_{0,3}))$. This can be directly derived from its definition,
@@ -71,7 +71,7 @@ With the definition of mappings provided, we show why these functions satisfy th
             \right.
         \end{displaymath}
     \item Variables and clock variables in the two $\nSTA$ are also the same, which lead to a conclusion that variable replacements are even not required, and they share the same invariants. 
-    \item For edges, as shown in the original definition of \emph{product} operator, all the edges in $E'$ are added following the three rules. In a nutshell, there are two types of edges, \emph{synchronous} or \emph{asynchronous}. In $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}$, an \emph{asynchronous} edge either an edge of $\mathscr{A}_{3}$, or an edge of $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})$. And a \emph{synchronous} edge only comes from combining an edge of $\mathscr{A}_{3}$ and an edge of $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})$. Similar to the last case, when you try to unfold it and recover its original form, you will find that $E'$ and $E''$ are almost the same, except for the different location identifiers.
+    \item For edges, as shown in the original definition of \emph{product} operator, all the edges in $E'$ are added following the three rules. In a nutshell, there are two types of edges, \emph{synchronous} or \emph{asynchronous}. In $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}$, an \emph{asynchronous} edge is either an edge of $\mathscr{A}_{3}$, or an edge of $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})$. And a \emph{synchronous} edge only comes from combining an edge of $\mathscr{A}_{3}$ and an edge of $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})$. Similar to the last case, when we try to unfold it and recover its original form, we can find that $E'$ and $E''$ are almost the same, except for the different location identifiers.
 \end{enumerate}
 \end{proof}
 
@@ -219,4 +219,4 @@ The \emph{commutative} law can be also simply proved using the similar steps.
 
 \subsection*{B. Semantics of the Embedded Control System}
 
-\input{em.jani}
+\input{em1.jani}

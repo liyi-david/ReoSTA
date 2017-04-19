@@ -81,8 +81,7 @@ As mentioned before, $\nSTA$ for a given Reo connector is constructed in a compo
     \item[\sem{StochasticChoice\langle dist\rangle(A,B)}] in Fig.~\ref{fig:basic}(j) consists of two locations: \emph{init} and \emph{ready}. As this is a synchronous channel, you may find it kind of confusing. The idea is that the random sampling should \textbf{NOT} be performed synchronously. Otherwise, you may meet the case where two edges can be triggered at the same time, but guard of the later edge relies on the random assignment of the previous one. It's hard to describe such semantics natually, so we always assume that the random process is done before triggering the assignment.
 
 
-    \item[\sem{pTimer\langle t_0\rangle(A,T,B)}] in Fig.~\ref{fig:pTimer} consists of two locations and a large family of edges.
-        \ly{Various border behavior is covered in this semantic model, making it capable to meet different requirements.}
+    \item[\sem{pTimer\langle t_0\rangle(A,T,B)}] in Fig.~\ref{fig:pTimer} consists of two locations and a large family of edges. Various border behavior are covered in this semantic model, making it capable to meet different requirements.
         \begin{figure}[H]
             \centering
             \resizebox{.8\textwidth}{!}{
@@ -139,7 +138,7 @@ where
 % \item{A finite set of edges $E$ is obtained through the rules which are shown in Definition 4.}
 % \end{itemize}
 
-In equation~\ref{equ:product}, guard formula is the logical conjunction of $g_1$ and $g_2$, formally $g(ev)=g_1(\restrict{ev}{V_1\cup C_1})\land g_2(\restrict{ev}{V_2\cup C_2})$ is defined simply following \emph{Inv}. However, the definition of $u$ is much more complicated. For example, in Fig.~\ref{fig:prodsyncandfifo} we may have \emph{dB := dA} as $u_1$, and \emph{dC := dB} as $u_2$. Their direct product is \emph{dB := dA, dC := dB}. Obviously, we need an order here to resolve the dependency between variables (otherwise these statements could become a great mess), which is provided as follows.
+In rule~(\ref{equ:product}), guard formula is the logical conjunction of $g_1$ and $g_2$, formally $g(ev)=g_1(\restrict{ev}{V_1\cup C_1})\land g_2(\restrict{ev}{V_2\cup C_2})$ is defined simply following \emph{Inv}. However, the definition of $u$ is much more complicated. For example, in Fig.~\ref{fig:prodsyncandfifo} we may have \emph{dB := dA} as $u_1$, and \emph{dC := dB} as $u_2$. Their direct product is \emph{dB := dA, dC := dB}. Obviously, we need an order here to resolve the dependency between variables (otherwise these statements could become a great mess), which is provided as follows.
 
 \begin{enumerate}
     \item Check all the assignment statements $v:=expr$ in $u_1$, and use expression $expr$ to replace all the existence of $v$ in both $u_2$ and $g_2$,
@@ -181,9 +180,7 @@ Hiding operation can be also used to remove multiple hideable actions at a time.
 % The well-defined definition of hiding operator depends on that we only have the flow-through operation to handle as the merge and replicate operations have been defined as channels. We also suppose that we always perform the merge and replicate operations first and perform the flow-through operation afterwards.
 % Thus when taking the intersection of $V_{1}$ and $V_{2}$, we don't need to worry about whether $V_{h}$, i.e. the intersection, is obtained from replicate, merge or flow-through operations.
 
-\ly{
-Let's consider an simple example in Fig.~\ref{fig:prodsyncandfifo}, where we use \emph{product} and \emph{hiding} operators to combine a \emph{Sync} and a \emph{FIFO1}. In the figure, we shows the combined connector in different stages and its corresponding $\nSTA$ step by step.
-}
+We consider a simple example in Fig.~\ref{fig:prodsyncandfifo}, where we use \emph{product} and \emph{hiding} operators to combine a \emph{Sync} and a \emph{FIFO1} channel. In Fig.~\ref{fig:prodsyncandfifo}, we show the combined connector in different stages and its corresponding $\nSTA$ step by step.
 
 \begin{figure}[H]
     \centering

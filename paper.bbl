@@ -1,0 +1,93 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem{JaniSpec}
+The {JANI} specification of the jani-model format and the jani-interaction
+  protocol, \url{http://www.jani-spec.org/}
+
+\bibitem{ARBAB2004}
+Arbab, F.: Reo: a channel-based coordination model for component composition.
+  Mathematical Structures in Computer Science  14(3),  329--366 (2004)
+
+\bibitem{Arbab2006}
+Arbab, F., Baier, C., de~Boer, F.S., Rutten, J.J.M.M.: Models and temporal
+  logical specifications for timed component connectors. Software and System
+  Modeling  6(1),  59--82 (2007)
+
+\bibitem{Arbab2009}
+Arbab, F., Chothia, T., van~der Mei, R., Meng, S., Moon, Y., Verhoef, C.: From
+  coordination to stochastic models of qos. In: {COORDINATION} 2009. LNCS, vol.
+  5521, pp. 268--287. Springer (2009)
+
+\bibitem{Models2005}
+Baier, C.: Probabilistic models for reo connector circuits. Journal of
+  Universal Computer Science  11(10),  1718--1748 (2005)
+
+\bibitem{Baier2006a}
+Baier, C., Sirjani, M., Arbab, F., Rutten, J.: Modeling component connectors in
+  reo by constraint automata. Science of Computer Programming  61(2),  75--113
+  (2006)
+
+\bibitem{Baier2006}
+Baier, C., Wolf, V.: Stochastic reasoning about channel-based component
+  connectors. In: Proceedings of {COORDINATION} 2006, LNCS, vol. 4038, pp.
+  1--15. Springer (2006)
+
+\bibitem{HahnHH14}
+Hahn, E.M., Hartmanns, A., Hermanns, H.: Reachability and reward checking for
+  stochastic timed automata. Electronic Communication of the European
+  Association of Software Science and Technology  70 (2014)
+
+\bibitem{HahnYiFM14}
+Hahn, E.M., Li, Y., Schewe, S., Turrini, A., Zhang, L.: {IscasMC}: A web-based
+  probabilistic model checker. In: Proceedings of {FM} 2014. LNCS, vol. 8442,
+  pp. 312--317. Springer (2014)
+
+\bibitem{Hartmanns12}
+Hartmanns, A.: Modest – a unified language for quantitative models. In:
+  Proceedings of {FDL}'12. pp. 44--51. IEEE (2012)
+
+\bibitem{Jongmans2012}
+Jongmans, S.S.T.Q., Arbab, F.: Overview of thirty semantic formalisms for reo.
+  Scientific Annals of Computer Science  22(1),  201--251 (2012)
+
+\bibitem{Kwia2007}
+Kwiatkowska, M., Norman, G., Parker, D.: Controller dependability analysis by
+  probabilistic model checking. Control Engineering Practice  15(11),
+  1427--1434 (2007)
+
+\bibitem{Li2009}
+Li, H.: Introducing Windows Azure. Apress, Berkely, CA, USA (2009)
+
+\bibitem{Li2015}
+Li, Y., Sun, M.: Modeling and verification of component connectors in coq.
+  Science of Computer Programming  113,  285--301 (2015)
+
+\bibitem{Meng2012}
+Meng, S.: Connectors as designs: The time dimension. In: Proceedings of {TASE}
+  2012. pp. 201--208. {IEEE} Computer Society (2012)
+
+\bibitem{Meng2007}
+Meng, S., Arbab, F.: On resource-sensitive timed component connectors. In:
+  Proceedings of {FMOODS} 2007. LNCS, vol. 4468, pp. 301--316. Springer (2007)
+
+\bibitem{Newcombe2015}
+Newcombe, C., Rath, T., Zhang, F., Munteanu, B., Brooker, M., Deardeuff, M.:
+  How amazon web services uses formal methods. Communications of the {ACM}
+  58(4),  66--73 (2015)
+
+\bibitem{Oliveira2016}
+Oliveira, N., Barbosa, L.S.: An enhanced model for stochastic coordination.
+  Electronic Proceedings in Theoretical Computer Science  228,  35--45 (2016)
+
+\bibitem{Pierro2004}
+Pierro, A.D., Hankin, C., Wiklicky, H.: Probabilistic klaim. In: de~Nicola, R.,
+  et~al. (eds.) {COORDINATION} 2004. LNCS, vol. 2949, p. 119–134. Springer
+  (2004)
+
+\bibitem{Priami95}
+Priami, C.: Stochastic pi-calculus. The Computer Journa  38(7),  578--589
+  (1995)
+
+\end{thebibliography}

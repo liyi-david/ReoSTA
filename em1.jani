@@ -45,30 +45,50 @@
     3 -> 3 (M_out, Output) : Output = M_out,
     4 -> 4 (M_out, Output) : Output = M_out,
 
+    7 -> 5 (Input_1, M_in) [buf_1 = 1, t = t_max] : t = 0,
+    7 -> 5 (Input_1, M_in, Timeout) [buf_1 = 1, t = t_max] :
+        t = 0, M_in = Input_1, Timeout = TIMEOUT,
     7 -> 5 (Input_1, M_in, M_out, Output) [buf_1 = 1] :
         t = 0, M_in = Input_1, Output = M_out,
     7 -> 5 (Input_1, M_in, M_out, Output, Timeout)
         [buf_1 = 1, t = t_max] :
         t = 0, M_in = Input_1, Output = M_out, Timeout = TIMEOUT,
+    6 -> 5 (Input_2, M_in) [buf_2 = 1, t = t_max] : t = 0,
+    6 -> 5 (Input_2, M_in, Timeout) [buf_2 = 1, t = t_max] :
+        t = 0, M_in = Input_2, Timeout = TIMEOUT,
     6 -> 5 (Input_2, M_in, M_out, Output) [buf_2 = 1] :
         t = 0, M_in = Input_2, Output = M_out,
     6 -> 5 (Input_2, M_in, M_out, Output, Timeout)
         [buf_2 = 1, t = t_max] :
         t = 0, M_in = Input_2, Output = M_out, Timeout = TIMEOUT,
+    8 -> 6 (Input_1, M_in) [buf_1 = 1, t = t_max] : t = 0,
+    8 -> 6 (Input_1, M_in, Timeout) [buf_1 = 1, t = t_max] :
+        t = 0, M_in = Input_1, Timeout = TIMEOUT,
     8 -> 6 (Input_1, M_in, M_out, Output) [buf_1 = 1] :
         t = 0, M_in = Input_1, Output = M_out,
     8 -> 6 (Input_1, M_in, M_out, Output, Timeout)
         [buf_1 = 1, t = t_max] :
         t = 0, M_in = Input_1, Output = M_out, Timeout = TIMEOUT,
+    8 -> 7 (Input_2, M_in) [buf_2 = 1, t = t_max] : t = 0,
+    8 -> 7 (Input_2, M_in, Timeout) [buf_2 = 1, t = t_max] :
+        t = 0, M_in = Input_2, Timeout = TIMEOUT,
     8 -> 7 (Input_2, M_in, M_out, Output) [buf_2 = 1] :
         t = 0, M_in = Input_2, Output = M_out,
     8 -> 7 (Input_2, M_in, M_out, Output, Timeout)
         [buf_2 = 1, t = t_max] :
         t = 0, M_in = Input_2, Output = M_out, Timeout = TIMEOUT,
+    8 -> 5 (Input_1, Input_2, M_in) [buf_1 = 1, t = t_max] : 
+        t = 0, M_in = Input_1,
+    8 -> 5 (Input_1, Input_2, M_in) [buf_2 = 1, t = t_max] :
+        t = 0, M_in = Input_2,
     8 -> 5 (Input_1, Input_2, M_in, M_out, Output) [buf_1 = 1] :
         t = 0, M_in = Input_1, Output = M_out,
     8 -> 5 (Input_1, Input_2, M_in, M_out, Output) [buf_2 = 1] :
         t = 0, M_in = Input_2, Output = M_out,
+    8 -> 5 (Input_1, Input_2, M_in, Timeout) [buf_1 = 1, t = t_max] :
+        t = 0, M_in = Input_1, Timeout = TIMEOUT,
+    8 -> 5 (Input_1, Input_2, M_in, Timeout) [buf_2 = 1, t = t_max] :
+        t = 0, M_in = Input_2, Timeout = TIMEOUT,
     8 -> 5 (Input_1, Input_2, M_in, M_out, Output, Timeout)
         [buf_1 = 1, t = t_max] :
         t = 0, M_in = Input_1, Output = M_out, Timeout = TIMEOUT,
@@ -77,18 +97,22 @@
         t = 0, M_in = Input_2, Output = M_out, Timeout = TIMEOUT,
 
     5 -> 1 (M_out, Output) [t < t_max] : Output = M_out,
+	5 -> 1 (i) [t = t_max]
     5 -> 1 (Timeout) [t = t_max] : Timeout = TIMEOUT,
     5 -> 1 (M_out, Output, Timeout) [t = t_max] :
         Output = M_out, Timeout = TIMEOUT,
     6 -> 2 (M_out, Output) [t < t_max] : Output = M_out,
+	6 -> 2 (i) [t = t_max]
     6 -> 2 (Timeout) [t = t_max] : Timeout = TIMEOUT,
     6 -> 2 (M_out, Output, Timeout) [t = t_max] :
         Output = M_out, Timeout = TIMEOUT,
     7 -> 3 (M_out, Output) [t < t_max] : Output = M_out,
+	7 -> 3 (i) [t = t_max]
     7 -> 3 (Timeout) [t = t_max] : Timeout = TIMEOUT,
     7 -> 3 (M_out, Output, Timeout) [t = t_max] :
         Output = M_out, Timeout = TIMEOUT,
     8 -> 4 (M_out, Output) [t < t_max] : Output = M_out,
+	8 -> 4 (i) [t = t_max]
     8 -> 4 (Timeout) [t = t_max] : Timeout = TIMEOUT,
     8 -> 4 (M_out, Output, Timeout) [t = t_max] :
         Output = M_out, Timeout = TIMEOUT,
