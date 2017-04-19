@@ -9,7 +9,7 @@ Due to the distributed nature, it is really hard to have a bug-free connector de
 Reo\cite{ARBAB2004}, as one of the most popular coordination languages, was designed to formalize the hierachy and communication process between components. Based on channels and nodes, Reo provides a compositional approach where complex connectors are built from simpler ones.
 In this paper, we extend Reo with new primitive channels and the enhanced semantics $\nSTA$, so that real-time and stochastic behavior can be easily handled.
 
-Compared with existing timed and stochastic (or probabilistic) semantics of Reo \cite{Meng2012,Meng2007,Baier2006,Arbab2009}, our work provides a more powerful and universal solution. 
+Compared with existing timed and stochastic (or probabilistic) semantics of Reo \cite{Arbab2009,Baier2006,Meng2012,Meng2007}, our work provides a more powerful and universal solution. 
 \begin{enumerate}
     \item \emph{Both timed behavior and stochastic behavior are supported, but declared separately.} This makes it free to model various coordination senarios by different combination patterns.
     \item \emph{Timelocks is avoided in this semantics, making the timed connectors fully implementable}. In the common semantics of timed Reo \cite{Arbab2006,Meng2012}, \emph{Timer} channels may get trapped in timelock, and in turn lead to unrealizable connectors.

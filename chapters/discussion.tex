@@ -1,46 +1,54 @@
 \section{Discussion}
 \label{sec:discussion}
 
-In the coordination world, Reo is well known for its variety on extensions and semantics\cite{Jongmans2012}. And this is, of course, not the first work on its timed or stochastic semantics. Here we take \emph{timed Reo}, \emph{probabilistic Reo}, and \emph{stochastic Reo} as examples, to illustrate how our new model differs from its predecessors.
+In the coordination community, Reo is well known for its variety on extensions and semantics\cite{Jongmans2012}. This paper is not the first work on its timed or stochastic 
+extension. Here we take \emph{timed Reo}, \emph{probabilistic Reo}, and \emph{stochastic Reo} 
+as examples to illustrate how our model differs from its predecessors.
 
-\vspace{0.5em}
-\noindent{\emph{Timed Reo.}} Time was natively involved in Reo from its very beginning\cite{ARBAB2004}, where \emph{FIFO1} channel needs time constraints to ensure its retardancy. However, time was involved, only implicitly, in this semantics instead of syntax. And in some other semantics like \emph{constraint automata}, time is even simplified as logic order. Then \cite{Arbab2006} proposed the raw \emph{t-Timer} channels to capture timed delays. This work was then followed and extended in \cite{Meng2007} and \cite{Meng2012} with different types of timed channels.
+%\vspace{0.5em}
+%\noindent{\emph{Timed Reo.}} 
+\paragraph{Timed Reo.}
+Time was natively involved in Reo from its very beginning \cite{ARBAB2004}, where \emph{FIFO1} channel needs time constraints to ensure its retardancy. However, time was involved only implicitly in  \cite{ARBAB2004} instead of syntax. And in some other semantic models like \emph{constraint automata}, time is even simplified as temporal order. A set of raw \emph{$t$-Timer} channels was proposed in \cite{Arbab2006} to capture timed delays. This work was then followed and extended in \cite{Meng2007} and \cite{Meng2012} with different types of timed models.
 
-The \emph{pTimer} channel here in our work is, basically, enhanced from \emph{Timer}t in \cite{Meng2012}. A \emph{Timer}t channel accepts data values and proceed timeout signals after a certain delay. However, it does not describe what happens if the timeout signal fails to deliver. In some cases, this will lead to timelock.
+The \emph{pTimer} channel proposed in this paper is basically enhanced from {$t$-Timer} in \cite{Meng2012}. A {$t$-Timer} channel accepts data values and produce timeout signals after a certain delay $t$. However, it does not describe what happens if the timeout signal fails to deliver. In some cases, this may lead to timelock.
 
-\emph{Timelock} have different meaning in different semantics. Informally speaking, a timed model falls into timelock if and only if there's no possible evolution that satisfies the model constraints, and hence the model execution is forced to stop. From a practical view, a connector suffering from timelock can not be simulated or implemented. And even in theoretical senarios \cite{Li2015}, it may also lead to inconsistency in proving frameworks as an unsatisfiable proposition \emph{False} derives everything.
-
+\emph{Timelock} has different meaning in different semantic models. Informally speaking, a timed model falls into timelock if and only if there is no possible evolution that satisfies the model constraints, and hence the model execution is forced to stop. From a practical perspective, a connector suffering from timelock can not be simulated or implemented. And even in theoretical scenarios \cite{Li2015}, it may also lead to inconsistency in proving frameworks as an unsatisfiable proposition \emph{False} derives everything.
 
 \begin{example}[Timelock in Timed Reo]
-    The \emph{Timer}t channels may easily lead to timelock. For example, in Fig.~\ref{fig:timelock}, there are two \emph{Timert}s, one is located between $A$ and $C$, the other between $B$ and $D$. According to the original definition of \emph{Timer}t in \cite{Arbab2006} and \cite{Meng2012}, we can derive that,
-    \[
-        \forall i\in\mathbb{N}, t_i(C)=t_i(A)+0.5, t_i(D)=t_i(B)+1,t_i(A)=t_i(B), t_i(C)=t_i(D)\quad (*)
-    \]
-    where $t(X)$ indicates the time stream on node $X$. For example, if $A$ accepts the first value at $0$, and the second value at $1$, then $t_0(A)=0,t_1(A)=1,\cdots$. From equation(*), it's easy to derive that $t(A) = t(A) + 0.5$. This connector will be trapped in timelock once $A$ starts accepting values.
+    The {$t$-Timer} channel may easily lead to timelock. For example, in Fig.~\ref{fig:timelock}, there are two {$t$-Timer}s, one is located between $A$ and $C$, the other between $B$ and $D$. According to the definition of {$t$-Timer} in \cite{Arbab2006} and \cite{Meng2012}, we can derive that,
+%    \[
+\begin{equation}
+        \forall i\in\mathbb{N}, t_i(C)=t_i(A)+0.5, t_i(D)=t_i(B)+1,t_i(A)=t_i(B), t_i(C)=t_i(D)
+\label{eq:timelock}
+        %\quad (*)
+\end{equation}
+%    \]
+    where $t(X)$ indicates the time stream on node $X$. For example, if $A$ accepts the first value at time $0$, and the second value at $1$, then $t_0(A)=0,t_1(A)=1,\cdots$. From (\ref{eq:timelock}), it's easy to derive that $t(A) = t(A) + 0.5$. This connector will be trapped in timelock once $A$ starts accepting values.
     \begin{figure}[H]
         \centering
         \input{./images/discussion/timelock}
-        \label{fig:timelock}
         \caption{Timelock Caused by Abuse of \emph{Timer}t}
+        \label{fig:timelock}
     \end{figure}
 \end{example}
 
-In comparison, \emph{pTimer} channels are timelock-free. If its sink end is not ready, the timeout signal will be dropped, and it channel will become available to accept new values again.
+In comparison, \emph{pTimer} channels are timelock-free. If its sink end is not ready, the timeout signal will be dropped, and it channel will become available to accept new data items again.
 
-Further more, \emph{pTimer} channels also support reconfiguration of delay. In an original \emph{Timer}t channel, the delay is assigned when encoding the connector, and cannot be rewritten during execution. As a result, when formalizing specific timed connectors, we still need other channels like \emph{reset-timer}, \emph{expired-timer} and so on. In our framework, \emph{pTimer} is capable to represent all these channels with only simple combination patterns.
+Further more, \emph{pTimer} channels also support reconfiguration of delays. In an original {$t$-Timer} channel, the delay is pre-configured when encoding the connector, and cannot be updated during the execution. As a result, when formalizing specific timed connectors, we still need other timed channel types like \emph{reset-timer}, \emph{expired-timer} and so on. In our framework, \emph{pTimer} can be used to represent all such timed channels via simple combination patterns.
 
-\vspace{0.5em}
-\noindent{\emph{Probabilistic Reo.}} \cite{Models2005} came up with a probabilistic extension of constraint automata, to formalize the potential lossy behavior in connectors.
+%\vspace{0.5em}
+%\noindent{\emph{Probabilistic Reo.}} 
+\paragraph{Probabilistic Reo.}
+a probabilistic extension of constraint automata was proposed in \cite{Models2005} to formalize the potential lossy behavior in connectors. In \cite{Models2005}, probabilistic loss of data may happen  while the data is being transmitted or waiting in the buffer. Definition of the former case is rather trivial, but in the latter one, the discrete time model is required. The authors assume that in each time unit, a buffer failure may happen with a probability $\tau$, and data items may get lost due to this failure.
 
-In \cite{Models2005}, probabilistic loss may happens while being transmitted or waiting in buffer. Definition of the former case is rather trivial, but in the latter one, discrete time is required and formalized as time units. The authors assume that in each time unit, a buffer failure may happens with probability $\tau$, and data values will get lost due to this failure.
+In Section \ref{sec:casestudies}, we have already shown that probabilistic lossy behavior of connectors can be represented by combination of \emph{StochasticChoice} channels and \emph{SyncDrain} channels. Actually, \emph{pTimer} channels can also produce discrete time signals. Thus, we can use probabilistic lossy channels and discrete time counters to reproduce probabilistic connectors like the \emph{LossyFIFO1} in \cite{Models2005}.
 
-In Section \ref{sec:casestudies}, we have already shown that probabilistic lossy channels can be represented by combination of \emph{StochasticChoice} channels and \emph{SyncDrain} channels. Actually, \emph{pTimer} channels is also capable to produce discrete time signals. Thus, we can use probablistic lossy channels and discrete time counters to reproduce the \emph{LossyFIFO1} in \cite{Models2005}.
+%\vspace{0.5em}
+%\noindent{\emph{Stochastic Reo.}} 
+\paragraph{Stochastic Reo.}
+Baier and Wolf proposed the first stochastic extension for Reo in \cite{Baier2006} based on Continuous-time Constraint Automata (CCA). The work was later extended with different semantics. For example, Quantitative Intentional Automata in \cite{Arbab2009} and interactive Markov Chain in \cite{Oliveira2016}.
 
-
-\vspace{0.5em}
-\noindent{\emph{Stochastic Reo.}} Baier and Wolf proposed the first stochastic extension for Reo in \cite{Baier2006} based on continuous-time constraint automata (CCA). The work was later extended with different semantics. For example, quantitative constraint automata in \cite{Arbab2009} and interactive markov chain in \cite{Oliveira2016}.
-
-Basically, most of those stochastic semantics are based on continuous-time markov chains. Delays and arrival rates are attached to all the primitive channels, giving them randomized and unreliable behavior. This approach has a defect that random behavior is bounded with time. We can produce random delays but not random values. That's the reason why we split off stochastic delays as \emph{StochasticChoice}. \emph{StochasticChoice} has nothing to do with time, but we can always combine it with \emph{pTimer} to produce different timed connectors.
+Basically, most of those stochastic semantics are based on continuous-time Markov Chains. Delays and arrival rates are attached to primitive channels, giving them randomized or unreliable behavior. This approach has a defect that random behavior is bounded with time. We can produce random delays but not random values. That is the reason why we split off stochastic delays as \emph{StochasticChoice}. \emph{StochasticChoice} has nothing to do with time, but we can always combine it with \emph{pTimer} to produce different timed connectors with stochastic behavior.
 
 
 % \begin{figure}[H]
@@ -87,6 +95,4 @@ Basically, most of those stochastic semantics are based on continuous-time marko
 % \end{figure}
 \vspace{0.2cm}
 
-\ly{
-    There are also other coordination models that supports stochastic and timed behavior except for Reo. For example, Probabilistic KLAIM in \cite{Pierro2004}, Stochastic $\pi$-caculus in \cite{Priami95}, etc. However, most of them provide support for modeling not only connecors, but also components. This makes it possible to model timed and stochastic behavior in the component part, and do not need extra coordination primitives. Compared with these approaches, our framework supports more complicated coordination behaviors and more intuitive modeling interfaces (graphical representation), which also keep connector designers away from potential failures.
-}
+    There are also other coordination models that support stochastic and timed behavior besides Reo. For example, Probabilistic KLAIM \cite{Pierro2004}, Stochastic $\pi$-calculus \cite{Priami95}, etc. However, most of them provide support for modeling components and the coordination are concealed behind separate component behavior that may depend on each other. This makes it possible to model timed and stochastic behavior in the component part, and extra coordination primitives are not needed. Compared with these approaches, our framework supports more complicated coordination behaviors and more intuitive modeling interfaces (graphical representation), which also makes it easier to keep connector designers away from potential failures.
