@@ -8,9 +8,9 @@ as examples to illustrate how our model differs from its predecessors.
 %\vspace{0.5em}
 %\noindent{\emph{Timed Reo.}} 
 \paragraph{Timed Reo.}
-Time was natively involved in Reo from its very beginning \cite{ARBAB2004}, where \emph{FIFO1} channel needs time constraints to ensure its retardancy. However, time was involved only implicitly in  \cite{ARBAB2004} instead of syntax. And in some other semantic models like \emph{constraint automata}, time is even simplified as temporal order. A set of raw \emph{$t$-Timer} channels was proposed in \cite{Arbab2006} to capture timed delays. This work was then followed and extended in \cite{Meng2007} and \cite{Meng2012} with different types of timed models.
+Time was natively involved in Reo from its very beginning \cite{ARBAB2004}, where \emph{FIFO1} channel needs time constraints to ensure its retardancy. However, time was involved only implicitly in  \cite{ARBAB2004} instead of syntax. And in some other semantic models like \emph{constraint automata}, time is even simplified to temporal order. A set of raw \emph{$t$-Timer} channels was proposed in \cite{Arbab2006} to capture timed delays. This work was then followed and extended in \cite{Meng2007} and \cite{Meng2012} with different types of timed models.
 
-The \emph{pTimer} channel proposed in this paper is basically enhanced from {$t$-Timer} in \cite{Meng2012}. A {$t$-Timer} channel accepts data values and produce timeout signals after a certain delay $t$. However, it does not describe what happens if the timeout signal fails to deliver. In some cases, this may lead to timelock.
+The \emph{pTimer} channel proposed in this paper is basically an improvement of {$t$-Timer} in \cite{Meng2012}. A {$t$-Timer} channel accepts data values and produce timeout signals after a certain delay $t$. However, it does not describe what happens if the timeout signal fails to deliver. In some cases, this may lead to timelock.
 
 \emph{Timelock} has different meaning in different semantic models. Informally speaking, a timed model falls into timelock if and only if there is no possible evolution that satisfies the model constraints, and hence the model execution is forced to stop. From a practical perspective, a connector suffering from timelock can not be simulated or implemented. And even in theoretical scenarios \cite{Li2015}, it may also lead to inconsistency in proving frameworks as an unsatisfiable proposition \emph{False} derives everything.
 
@@ -95,4 +95,10 @@ Basically, most of those stochastic semantics are based on continuous-time Marko
 % \end{figure}
 \vspace{0.2cm}
 
+<<<<<<< HEAD
     There are also other coordination models that support stochastic and timed behavior besides Reo. For example, Probabilistic KLAIM \cite{Pierro2004}, Stochastic $\pi$-calculus \cite{Priami95}, etc. However, most of them provide support for modeling components and the coordination are concealed behind separate component behavior that may depend on each other. This makes it possible to model timed and stochastic behavior in the component part, and extra coordination primitives are not needed. Compared with these approaches, our framework supports more complicated coordination behaviors and more intuitive modeling interfaces (graphical representation), which also makes it easier to keep connector designers away from potential failures.
+=======
+\ly{
+    There are also other coordination models that supports stochastic and timed behavior except for Reo. For example, Probabilistic KLAIM in \cite{Pierro2004}, Stochastic $\pi$-caculus in \cite{Priami95}, etc. However, most of them provide support for modeling not only connecors, but also components. This makes it possible to model timed and stochastic behavior in the component part, and do not need extra coordination primitives. Compared with these approaches, our framework supports more complicated coordination behaviors and more intuitive modeling interfaces (graphical representation), which also keep connector designers away from potential failures.
+}
+>>>>>>> sta
