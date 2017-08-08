@@ -1,16 +1,18 @@
 \section{Stochastic Timed Automata for Reo}
 \label{sec:semantics}
 
-In this section, first we introduce the formal model $\nSTA$ that yields the basis for reasoning about timed and stochastic behavior of connectors. Then we define the new semantics for primitive Reo channels based on $\nSTA$, and explain how to construct the $\nSTA$ for complex connectors by applying the \emph{product} and \emph{hiding} operators to the $\nSTA$ for simpler ones.
+In this section, first we introduce the formal model $\nSTA$ that yields the basis for reasoning about timed and stochastic behavior of connectors. Then we define the new semantics for primitive Reo channels based on $\nSTA$, and explain how to construct $\nSTA$ for complex connectors by applying the \emph{product} and \emph{hiding} operators to $\nSTA$ of simpler ones.
 \subsection{$\nSTA$}
 
-Stochastic timed automata (STA) \cite{HahnHH14} is a powerful formalism to describe stochastic behavior and real-time behavior. Both continuous distribution and discrete distribution are supported in STA. In this paper, we slightly adapt STA as $\nSTA$ so that Reo channels can be depicted more naturally and clearly.
+Stochastic timed automata (STA) \cite{HahnHH14} is a powerful formalism to describe stochastic behavior and real-time behavior. Both continuous distributions and discrete distributions are supported in STA. In this paper, we slightly adapt STA as $\nSTA$ so that Reo channels can be depicted more naturally and clearly.
 Before touching the technical details of $\nSTA$, we first introduce some notations that will be used later.
 
-During the rest of this paper, we will use $\mathbb{D}$ to denote the \emph{data scope}, which can be any finite set, the set of real numbers $\mathbb{R}$ or their union. Namely, $\mathbb{D}$ is finite, or $\mathbb{R}\subseteq \mathbb{D}$ and $\mathbb{D}\backslash \mathbb{R}$ is finite. When the data scope is limited to finite sets, stochastic assignments are, obviously, not supported. For example, if $\mathbb{D}=\{1,2\}$, $v:=norm(e,\sigma)$ is an invalid assignment while $v':=1+\operatorname{B}(1, 0.5)$ is acceptable, where $norm$ and $\operatorname{B}$ stand for normal and binomial distribution respectively. We use $Dist(S)$ to denote the set of continuous or discrete distributions on $S$.
+During the rest of this paper, we will use $\mathbb{D}$ to denote the \emph{data scope}, which can be either \emph{a) any finite set}, \emph{b) the set of real numbers $\mathbb{R}$}, or their union.
+Namely, $\mathbb{D}$ is finite, or $\mathbb{D}\backslash \mathbb{R}$ is finite (if $\mathbb{R}\subseteq \mathbb{D}$).
+When the data scope is restricted to finite sets, stochastic assignments are no longer supported. For example, if $\mathbb{D}=\{1,2\}$, $v:=norm(e,\sigma)$ is an invalid assignment while $v':=1+\operatorname{B}(1, 0.5)$ is acceptable, where $norm$ and $\operatorname{B}$ stand for normal and binomial distribution respectively. We use $Dist(S)$ to denote the set of continuous or discrete distributions on $S$.
 
 \begin{definition}[Evaluations]
-Suppose $V$ is a finite set of variables, an \emph{evaluation} on $V$ is defined as a function $ev_V:V\rightarrow \mathbb{D}$ that maps a variable identifier to a value. Similarly, we can also define clock evaluations on $C$ as $ev_C:C\rightarrow \mathbb{R}$, where $C$ is a set of clock variables. Natually, we can use $EV_V$ to denote the set of all evaluations on $V$, $EV_C$ to denote the set of all clock evaluations on $C$, and $EV$ to denote their combination, i.e. 
+Suppose $V$ is a finite set of variables, an \emph{evaluation} on $V$ is defined as a function $ev_V:V\rightarrow \mathbb{D}$ that maps a variable identifier to its valuation. Similarly, we can also define clock evaluations on $C$ as $ev_C:C\rightarrow \mathbb{R}$, where $C$ is a set of clock variables. Natually, we can use $EV_V$ to denote the set of all evaluations on $V$, $EV_C$ to denote the set of all clock evaluations on $C$, and $EV$ to denote their combination, i.e. 
 
 \begin{displaymath}
     EV=\Bigg\{ev:V\cup C\rightarrow \mathbb{D}\cup\mathbb{R}|
@@ -29,7 +31,7 @@ Suppose $V$ is a finite set of variables, an \emph{evaluation} on $V$ is defined
 
 In practice, evaluations are usually represented by a set of assignment statements. E.g., \emph{\{a := TIMEOUT, b := 1, c := 0.5, $\cdots$\}}.
 
-In $\nSTA$, there is a very different concept named \emph{adjoint variable}. That is, for each external action $A$, when it shows up, there must be a data value coming along, and assigned to its adjoint variable \emph{dA}. Adjoint variables are used to describe the channels' behavior : channel ends are triggered if and only if a data value comes (or leaves).
+In $\nSTA$, there is a very different concept named \emph{adjoint variable}. That is, for each external action $A$, when it is provided by the environment, there must be a data value coming along, and assigned to its adjoint variable \emph{dA}. Adjoint variables are used to describe the channels' behavior, where the basic idea is: channel ends are triggered iff. data values come (or leave).
 
 \begin{definition}[$\nSTA$]
 Stochastic Timed Automata for Reo ($\nSTA$) is defined as an 8-tuple $\langle L, l_0, Acts, V, V_0, C, Inv, E\rangle$ where:
@@ -37,15 +39,15 @@ Stochastic Timed Automata for Reo ($\nSTA$) is defined as an 8-tuple $\langle L,
 \begin{itemize}
     \item $L$ is a finite set of locations,
     \item $l_0\in L$ is an initial location,
-    \item $Acts$ is a finite set of actions with the internal action $i\in Acts$ (we use $Acts_e$ to denote the set of external actions $Acts\backslash \{i\}$),
-    \item $V$ is a finite set of variables that satisfies $\forall A\in Acts_e, dA\in V$,
+    \item $Acts$ is a finite set of actions,
+    \item $V$ is a finite set of variables that satisfies $\forall A\in Acts, dA\in V$,
     \item $V_0\in EV$ is an initialized function for variables,
     \item $C$ is a finite set of clocks (we always assume that $V\cap C=\varnothing$),
     \item $Inv:L\rightarrow (EV\rightarrow Bool)$ is a function that maps locations to their corresponding invariants,
     \item $E$ is a finite set of edges. An \emph{edge} of a $\nSTA$ is defined as a 5-tuple $\langle l, acts, g, u, l'\rangle$ where
         \begin{itemize}
             \item $l\in L$ is the source location,
-            \item $acts\in P(Acts_e)\cup\{\{i\}\}$ is a set of actions (external actions and internal actions do not appear on the same edge simultaneously). The transition can be fired either $acts=\{i\}$ or all external actions in $acts$ are prepared,
+            \item $acts\in P(Acts)$ is a finite set of actions (internal action is denoted by the empty set),
             \item $g:EV\rightarrow Bool$ is the guard constraint that maps an evaluation (for both variables and clocks) to a boolean value \emph{true} or \emph{false},
             \item $u:EV\rightarrow Dist(EV)$ is a random assignment that updates the current evaluation with a random sample following a certain distribution of $Dist(EV)$,
             \item $l'\in L$ is the target location.
@@ -53,14 +55,16 @@ Stochastic Timed Automata for Reo ($\nSTA$) is defined as an 8-tuple $\langle L,
 \end{itemize}
 \end{definition}
 
-In the following, we write $l \xrightarrow{\textbf{acts}, g, u}_E l'$ instead of $\langle l, acts, g , u, l' \rangle \in E$, or simply $l \xrightarrow{\textbf{acts}, g, u} l'$ under ambiguity-free context. Meanwhile, in a $\nSTA$ graph we use [\textbf{acts}, \emph{g}]\emph{u} to label such a transition (see in Fig.~\ref{fig:basic}).
+In the following, we write $l \xrightarrow{\textbf{acts}, g, u}_E l'$ instead of $\langle l, acts, g , u, l' \rangle \in E$, or simply $l \xrightarrow{\textbf{acts}, g, u} l'$ if it does not lead to ambiguity. Meanwhile, in a $\nSTA$ graph we use [\textbf{acts}, \emph{g}]\emph{u} to label such a transition (see in Fig.~\ref{fig:basic}). For simplicity reasons, tautology guards and internal actions are omitted.
 
 \subsection{Semantics of Primitive Channels}
-As mentioned before, $\nSTA$ for a given Reo connector is constructed in a compositional way. In this subsection, we provide semantics of the primitive channels as $\nSTA$, including both original and extended ones. The \sem{\cdot} operator is used to denote \emph{semantics map} which maps a Reo connector to its semantics as $\nSTA$.
+As mentioned before, \ly{the} $\nSTA$ for a given Reo connector is constructed in a compositional way. In this subsection, we provide semantics of the primitive channels as $\nSTA$, including both original and extended ones. The \sem{\cdot} operator is used to denote \emph{semantics map} which maps a Reo connector to its semantics as $\nSTA$.
+
+The following figures (Fig.~\ref{fig:basic} and Fig.~\ref{fig:pTimer}) provide a graphical representations of the primitive channels' semantics (both standard and extended ones included). \ly{In these figures, we use a set of assignments to represent an update $u$. For example, $dA, dB := exp_1, exp_2$ leads to a new evaluation where $dA$ and $dB$ are updated to $exp_1$ and $exp_2$ (both are calculated under the original evaluation).}
 
 \begin{figure}[H]
     \centering
-    \resizebox{\textwidth}{!}{
+    \resizebox{.9\textwidth}{!}{
         \input{images/channels/basic}
     }
     \caption{Semantics of Primitive Channels}
@@ -70,18 +74,18 @@ As mentioned before, $\nSTA$ for a given Reo connector is constructed in a compo
 
 \begin{description}
     \item[\sem{Sync(A, B)}] in Fig.~\ref{fig:basic}(a) has only one single location and a self-loop edge indicating the read-and-write operation. No variables are involved in this automata.
-    \item[\sem{LossySync(A, B)}] in Fig.~\ref{fig:basic}(b) is a variation of $Sync$ where data may be lost when flowing through. Here we use an extra edge to indicate this \emph{lossy} behavior.
+    \item[\sem{LossySync(A, B)}] in Fig.~\ref{fig:basic}(b) is a variation of $Sync$ where data may be lost when flowing through. Here we use an extra edge to indicate this \emph{lossy} behavior which is only triggered when $B$ is not writable.
     \item[\sem{SyncDrain(A, B)}] in Fig.~\ref{fig:basic}(c) also consists of only one location. However, unlike \emph{Sync}, there are no assignments here since all the data items are simply dropped in this channel.
-    \item[\sem{AsyncDrain(A, B)}] in Fig.~\ref{fig:basic}(d) is a variation of \emph{SyncDrain} where we can only drop one value at a time\footnote{Different interpretations of \emph{AsyncDrain} have been proposed in \cite{ARBAB2004,Baier2006a}. For simplicity we choose the later one in \cite{Baier2006a}, and don't consider fairness issues.}.
+    \item[\sem{AsyncDrain(A, B)}] in Fig.~\ref{fig:basic}(d) is an asynchronous variation of \emph{SyncDrain} where we can only drop from one end at a time\footnote{Different interpretations of \emph{AsyncDrain} have been proposed in \cite{ARBAB2004,Baier2006a}. For simplicity we choose the later one in \cite{Baier2006a}, and don't consider fairness issues.}.
     \item[\sem{Filter\langle P\rangle(A,B)}] in Fig.~\ref{fig:basic}(e) has one location and two edges. One is for the satisfaction of filter predicate and the other is for failure.
     \item[\sem{FIFO1(A,B)}] in Fig.~\ref{fig:basic}(f) consists of two locations and two edges, one for reading and one for writing. Variable \emph{buf} is used to store the value in the buffer. As mentioned earlier, data items are supposed to stay in the buffer for a positive delay, so we also need a clock $t$ even if it's not a timed channel.
     \item[\sem{Replicator(A,B,C)}] in Fig.~\ref{fig:basic}(g) has only one location and one edge. The edge can be triggered if and only if a data value is obtained from $A$ and broadcast to both $B$ and $C$.
     \item[\sem{Merger(A,B,C)}] in Fig.~\ref{fig:basic}(h) also has only one location, but two edges for two sink ends, respectively.
-    \item[\sem{Map\langle f\rangle(A,B)}] in Fig.~\ref{fig:basic}(i) is also a variation of \emph{Sync} where the mapping function $f$ will be applied to any flow-through data item.
-    \item[\sem{StochasticChoice\langle dist\rangle(A,B)}] in Fig.~\ref{fig:basic}(j) consists of two locations: \emph{init} and \emph{ready}. As this is a synchronous channel, you may find it kind of confusing. The idea is that the random sampling should \textbf{NOT} be performed simultaneously. Otherwise, you may meet the case where two edges can be triggered at the same time, but guard of the later edge relies on the random assignment of the previous one. It's hard to describe such semantics natually, so we always assume that the random process is done before triggering the assignment.
+    \item[\sem{Map\langle f\rangle(A,B)}] in Fig.~\ref{fig:basic}(i) is a synchronous channel where the mapping function $f$ will be applied to any flow-through data item.
+    \item[\sem{StochasticChoice\langle dist\rangle(A,B)}] in Fig.~\ref{fig:basic}(j) consists of two locations: \emph{init} and \emph{ready}. As this is a synchronous channel, you may find it kind of  confusing. The idea is that the random sampling should not be performed simultaneously. Otherwise, you may meet the case where two edges can be triggered at the same time, but guard of the later edge relies on the random assignment of the previous one. It's hard to describe such semantics natually, so we always assume that the random process is done before triggering the assignment.
 
 
-    \item[\sem{pTimer\langle t_0\rangle(A,T,B)}] in Fig.~\ref{fig:pTimer} consists of two locations and a large family of edges. Various border behavior are covered in this semantic model, making it capable to meet different requirements.
+    \item[\sem{pTimer\langle t_0\rangle(A,T,B)}] in Fig.~\ref{fig:pTimer} consists of two locations and a large family of edges. Various border behavior is covered in this semantic model, making it capable to meet different requirements.
         \begin{figure}[H]
             \centering
             \resizebox{.8\textwidth}{!}{
@@ -90,6 +94,11 @@ As mentioned before, $\nSTA$ for a given Reo connector is constructed in a compo
             \caption{Semantics of pTimer}
             \label{fig:pTimer}
         \end{figure}
+    When the channel is in \emph{init} state, it is able to accept values from $T$ and update its delay time, or accept values from $A$, jump to the \emph{activated} state and start counting down process. In the \emph{activated} state, the channel may accept values from $A$, $B$ and $T$:
+    \begin{itemize}
+        \item \emph{When counting down process is not finished yet,} only $T$ is writable and any incoming values from $T$ will reset the timer to \emph{init} state.
+        \item \emph{When counting down finishes,} all combinations in $P(A,B,T)$ is acceptable. If $B$ is writable, a TIMEOUT signal will be sent to B. If $A$ has an incoming value, it will trigger a new counting down process immediately. And if $T$ has an incoming value, the delay time will be overridden.
+    \end{itemize}
 \end{description}
 
 \subsection{Composition of Connectors as $\nSTA$}
@@ -261,13 +270,13 @@ To specify the well-definedness of composition operators listed above, here we p
 
 \begin{definition}[Isomorphism]
     \label{def:isomorphism}
-    Two $\nSTA$ are \emph{isomorphic} ($\mathscr{A}_1\cong\mathscr{A}_2$, where $\mathscr{A}_{i}=\langle L_{i}, l_{0,i}, Acts_{i}, V_{i}, V_{0,i}, C_{i}, Inv_{i}, E_{i}\rangle$), if the 1-to-1 mappings $f_L:L_1\rightarrow L_2$, $f_V:V_1\rightarrow V_2$, $f_C:C_1\rightarrow C_2$, $f_{act}:Acts_1\rightarrow Acts_2$
+    Two $\nSTA$ are \emph{isomorphic} ($\mathscr{A}_1\cong\mathscr{A}_2$, where $\mathscr{A}_{i}=\langle L_{i}, l_{0,i}, \ly{Acts}, V_{i}, V_{0,i}, C_{i}, Inv_{i}, E_{i}\rangle$), if the 1-to-1 mappings $f_L:L_1\rightarrow L_2$, $f_V:V_1\rightarrow V_2$ \ly{and} $f_C:C_1\rightarrow C_2$
     exist and satisfy:
     \begin{itemize}
         \item $f_L(l_{0,1}) = l_{0,2}$, 
         \item $\forall v\in V_1, V_{0,1}(v) = V_{0,2}(f_V(v))$,
         \item $\forall l\in L_1, Inv_1(l)$ and $Inv_2(f_L(l))$ can be obtained from each other by variables' replacement specified by $f_V$ and $f_C$,
-        \item $\forall e=\langle l, acts, g , u, l' \rangle \in E_1$, we can find a corresponding exclusive edge $e'\in E_2 = \langle f_L(l), \{f_{act}(a)|a\in acts\}, g', u', f_L(l')\rangle$
+        \item $\forall e=\langle l, acts, g , u, l' \rangle \in E_1$, we can find a corresponding exclusive edge $e'\in E_2 = \langle f_L(l), acts, g', u', f_L(l')\rangle$
         where $g',u'$ and $g,u$ can be obtained from each other by variables' replacement specified by $f_V$ and $f_C$.
     \end{itemize}
 \end{definition}
@@ -283,7 +292,7 @@ Informally speaking, two $\nSTA$ are isomorphic if they have the same graphical 
 
 
 % However, the commutative law of $\nSTA$ corresponding to $channelname1$ and $channelname2$ is not so explicit as composition of channels.
-\begin{theorem}[Commutative]
+\begin{theorem}[Commutative\footnote{Proof can be found at https://github.com/liyi-david/ReoSTA.}]
 \label{thm:commutative}
 Let $\mathscr{A}_1, \mathscr{A}_2$ be two $\nSTA$, $\mathscr{A}_{1}\bowtie \mathscr{A}_{2}\cong\mathscr{A}_{2}\bowtie \mathscr{A}_{1}$.
 \end{theorem}

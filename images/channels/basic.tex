@@ -1,4 +1,4 @@
-\begin{tikzpicture}
+\begin{tikzpicture}[>=stealth']
 
     % ------------------------------- SYNC & LOSSY ---------------------------------
     % State: ACK with different content
@@ -211,7 +211,7 @@
     % draw the paths and and print some Text below/above the graph
     \path
         (sinit)   edge[bend right, ->] 
-            node[below] {[\textbf{i}] \emph{buf := dist()}} 
+            node[below] {[ ] \emph{buf := dist()}} 
         (sready)
 
         (sready)  edge[bend right, ->]

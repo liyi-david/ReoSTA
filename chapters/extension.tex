@@ -3,7 +3,7 @@
 
 \subsection{Reo}
 
-Reo is a channel-based exogenous coordination language proposed by F. Arbab in \cite{ARBAB2004}, where concurrency protocols are manifested as \emph{connectors}. Basically, connectors are constructed in a compositional approach: complex ones are composed of simpler ones, where the atomic ones are called \emph{channels}. Channels are glued on \emph{nodes}, and they together perform the behavior of connectors.
+Reo is a channel-based exogenous coordination language proposed by F. Arbab in \cite{ARBAB2004}, where concurrency protocols are manifested as \emph{connectors}. Basically, connectors are constructed through a compositional approach: complex ones are composed of simpler ones, where the atomic ones are called \emph{channels}. Channels are glued on \emph{nodes}, and they together perform the behavior of connectors.
 
 \vspace{.5em}
 
@@ -16,10 +16,10 @@ Reo is a channel-based exogenous coordination language proposed by F. Arbab in \
     \label{fig:typeofnodes}
 \end{figure}
 
-Essentially, a \emph{source node} performs \emph{replicate} behavior. That is, any coming data values will be broadcasted sychronously if and only if all its successors are ready to accept. A \emph{sink node} performs \emph{merge} behavior, accepting data values from its predecessors one at a time (this can be a non-deteministic choice if all predecessors are ready to write). And a \emph{mixed node}, literally, performs both behavior at the same time, randomly picking one input and broadcast it to all outputs.
+Essentially, a \emph{source node} performs \emph{replicating} behavior. That is, any coming data values will be broadcasted synchronously if and only if all its successors are ready to accept. A \emph{sink node} performs \emph{merging} behavior, accepting data values from its predecessors \ly{randomly} (this can be a non-deterministic choice if all predecessors are ready to write). And a \emph{mixed node}, literally, performs both behavior at the same time, randomly picking one input and broadcasting it to all outputs.
 
 \vspace{.5em}
-\noindent\emph{Channels.} As the basic functional units in Reo, channels are supposed to describe basic coordination behavior among \emph{channel ends}. Channel ends can be either a \emph{source end} or a \emph{sink end}, indicating the direction of data flow. A set of primitive channels can be found in Fig.~\ref{fig:basicchannels}, where we use arrows to indicate the type of channel ends.
+\noindent\emph{Channels.} As the basic functional units in Reo, channels are supposed to describe basic coordination behavior among \emph{channel ends}. A channel ends can be either a \emph{source end} or a \emph{sink end}, indicating the direction of its data flow. A set of primitive channels can be found in Fig.~\ref{fig:basicchannels}, where we use arrows to indicate the type of channel ends.
 
 \begin{figure}[H]
     \centering
@@ -28,7 +28,7 @@ Essentially, a \emph{source node} performs \emph{replicate} behavior. That is, a
     \label{fig:basicchannels}
 \end{figure}
 
-Channels can be either \emph{synchronous} or \emph{asynchronous}. A channel is \emph{synchronous} if and only if the read and write operations on its channel ends are always performed simultaneously. The behavior of some primitive channels are specified as follows.
+Channels can be either \emph{synchronous} or \emph{asynchronous}. A channel is \emph{synchronous} if and only if the read and write operations on its channel ends are always performed simultaneously. The behavior of the primitive channels shown in Fig.\ref{fig:basicchannels} are specified as follows.
 
 \begin{description}
     \item \emph{Sync(A:source,B:sink)} is a \emph{synchronous} channel that delivers data values from its source end $A$ to its sink end $B$. A synchronous channel is fired only when $A$ is prepared for reading and $B$ is ready for writing. 
@@ -38,7 +38,7 @@ Channels can be either \emph{synchronous} or \emph{asynchronous}. A channel is \
     \item \emph{AsyncDrain(A\:B:source)} is an asynchronous variation of \emph{SyncDrain}. The most important difference is that it accepts data only from one end at a time. If both ends are ready to read, one of them (randomly picked) should wait.
     \item \emph{FIFO1(A:source,B:sink)} is an asynchronous channel with a source end $A$ and a sink end $B$. A FIFO1 channel can temporarily store one data value from its source end $A$ for arbitrary duration, and deliver it anytime when $B$ is ready to write. When the buffer is full, a FIFO1 cannot accept any more data values.
     \item \emph{Filter$\langle P\rangle$(A:source,B:sink)}
-    is a synchronous channel with a source end $A$, a sink end $B$ and a boolean function $P$ as its parameter. When there is data at end A, first we have to check if the value satisfies the filter predicate $P$. If the answer is yes, the channel will behave just as \emph{Sync}, otherwise the value will be simply dropped.
+    is a synchronous channel with a source end $A$, a sink end $B$ and a boolean function $P$ as its parameter. When data comes to end A, first we have to check whether the value satisfies the filter predicate $P$. If the answer is yes, the channel will behave just as \emph{Sync}, otherwise the value will be simply dropped.
 \end{description}
 
 \noindent\emph{Composition.} Formalization of nodes sometimes becomes rather complicated, as arbitrary number of incoming and outgoing edges may be involved. Usually, we tend to introduce two ternary channels \emph{Replicator}, \emph{Merger} and use their combinations to capture the behavior of mixed nodes.
@@ -50,18 +50,20 @@ Channels can be either \emph{synchronous} or \emph{asynchronous}. A channel is \
 \end{figure}
 
 \begin{description}
-    \item \emph{Replicator(A:source,B\:C:sink)} is a \emph{synchronous} broadcast channel with a source end $A$ and two sink ends $B,C$. The channel accepts data values from $A$, and broadcast them to $B,C$ iff. both $B$ and $C$ are ready to write.
+    \item \emph{Replicator(A:source,B\:C:sink)} is a \emph{synchronous} broadcast channel with a source end $A$ and two sink ends $B,C$. The channel accepts data values from $A$, and broadcasts them to $B,C$ iff. both $B$ and $C$ are ready to write.
     \item \emph{Merger(A\:B:source,C:sink)}
-    is an \emph{asynchronous} channel that collects inputs from either $A$ or $B$ and send them to $C$ simultaneously if $C$ is prepared.
+    is an \emph{asynchronous} channel that collects inputs from either $A$ or $B$ and sends them to $C$ simultaneously if $C$ is prepared.
 \end{description}
 
-\emph{Replicator}s and \emph{Merger}s can reduce the number of incoming and outgoing edges for mixed nodes. For example, if we replace two outgoing edges with a \emph{Replicator} channel, the number of edges would be reduced by 1. After a finite number of replacements, all the mixed nodes can be simplified as nodes with one incoming edge and one outgoing edge, which is called \emph{flow-through}.
-When processing the semantics of connectors, we assume that all the mixed nodes are \emph{flow-through} ones. However, to make it easy to understand, in the figures we still draw the mixed nodes in its original form.
+\emph{Replicator}s and \emph{Merger}s can reduce the number of incoming and outgoing edges for mixed nodes. For example, if we replace two outgoing edges with a \emph{Replicator} channel, the number of edges would be reduced by 1. After a finite number of replacements, all the mixed nodes can be simplified as nodes with one incoming edge and one outgoing edge, which are called \emph{flow-through}.
+When processing the semantics of connectors, we assume that all the mixed nodes are \emph{flow-through} ones. But in the figures we still draw the mixed nodes in their original form to make it clear and easy to understand.
 
 \subsection{Capturing Timed and Stochastic Behavior}
 
-In this subsection, we come up with some new primitive channels, which extend Reo and make it capable to specify timed and stochastic behavior.
-Compared with other formal languages, Reo provides a framework which can be easily extended by adding new channel types to the primitive channel set. Usually, new channels should be simple enough, and orthogonal to the existing ones. Following this idea, here we propose three channel types, capturing \emph{data evolution}, \emph{stochastic choice}, and \emph{timed delay}.
+In this subsection, we come up with some primitive channels, which extend Reo and make it capable to specify timed and stochastic behavior.
+Compared with other formal languages, Reo provides a framework which can be easily extended by adding new channel types to the primitive channel set. Usually, new channels should be simple enough, and orthogonal to the existing ones. Following this idea, here we propose three channel types, capturing \emph{data evolution}, \emph{stochastic choice}, and \emph{time delay}.
+
+In the following definitions, we use $\langle p \rangle$ to denote the parameter of a channel. Value of parameters should be provided while declaring the channel, and would never be updated during the execution.
 
 \begin{figure}[t]
     \centering
@@ -72,12 +74,15 @@ Compared with other formal languages, Reo provides a framework which can be easi
 
 \begin{description}
     \item \emph{Map$\langle f\rangle$(A:source,B:sink)}
-        is a synchronous channel with a source end $A$, a sink end $B$ and a mapping function $f$ as its parameter. The function $f$ has exactly one argument. However, the argument may not always be used (for example, the function can be constant, i.e. $f(\cdot)=1$).
-        A \emph{Map} channel behaves similar to a \emph{Sync} channel. But it will apply $f$ to all the incoming data values and write the results to $B$.
-    \item \emph{StochasticChoice$\langle dist\rangle($A:source,B:sink)} is a combination of a $Sync$ channel and a randomizer.
-        It accepts data values from source node $A$ only when $B$ is writable. Then, a random value following distribution $dist$ will be sent to $B$, where $dist$ is provided as a parameter.
+        is a synchronous channel with a source end $A$, a sink end $B$ and a mapping function $f$ as its parameter. 
+        A \emph{Map} channel accepts incoming values from its source end $A$ (only when $B$ is ready for writing) and then it writes $f(dA)$ to $B$ simultaneously \ly{($dA$ denotes the data accepted from $A$)}.
+    
+    \item \emph{StochasticChoice$\langle dist\rangle($A:source,B:sink)} is a synchronous randomizer channel that accepts data values from its source node $A$ (only when $B$ is ready for writing) and writes a random value to $B$ simultaneously. The random value is sampled from the distribution parameter $dist$.
+    
     \item \emph{pTimer$\langle t_0\rangle$(A\:T:source,B:sink)} is a \emph{parameterized} version of $t$-Timer in \cite{Meng2012}. 
-        The channel accepts a data value from $A$ and throw out a timeout signal to $B$ after a certain delay. The delay is initialized by $t_0$, and can be rewritten by values coming from the source end $T$. Initially, a \emph{pTimer} channel is ready to accept a numeric value from $T$ and resets its timeout as that value. However, after the channel accepts a data value from $A$ and start counting, any new value from $T$ will reset the \emph{pTimer}, force it jumping to the initial state and forget the current counting status. If the counting process is not terminated by $T$, it will finish after the delay. Then a timeout signal will be sent to $B$ if it is writable, or simply ignored otherwise.
+        The channel accepts data values from its source end $A$ and starts counting down. Then after a certain delay, it will send a TIMEOUT signal to $B$ if writable, and otherwise do nothing. In both cases, the channel will reset itself and prepare to accept the next incoming value.
+        
+        Value of the delay is initialized by the parameter $t_0$, and can be overridden by incoming values from the source end $T$. When the \emph{pTimer} is not in counting down stage, an incoming value from T will simply update the delay value. Otherwise the incoming value will reset it, update the delay value, and write nothing to $B$. When the new delay value is provided exactly at the same time when counting down process terminates, the channel will still generate the timeout signal.
 
 \end{description}
 

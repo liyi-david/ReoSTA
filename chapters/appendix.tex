@@ -6,11 +6,11 @@
 Let $\mathscr{A}_1, \mathscr{A}_2, \mathscr{A}_3$ be three $\nSTA$, ($\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}\cong\mathscr{A}_{1}\bowtie(\mathscr{A}_{2}\bowtie \mathscr{A}_{3})$.
 
 \begin{proof}
-We provide the sketch of this proof in a constructive style. Suppose $\mathscr{A}_i=\langle L_{i}, l_{0,i}, Acts_{i}, V_{i}, V_{0,i}, C_{i}, Inv_{i}, E_{i}\rangle$. First we calculate the two result $\nSTA$, the first one $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}$ is denoted by,
+We provide the sketch of this proof in a constructive style. Suppose $\mathscr{A}_i=\langle L_{i}, l_{0,i}, Acts, V_{i}, V_{0,i}, C_{i}, Inv_{i}, E_{i}\rangle$. First we calculate the two result $\nSTA$, the first one $(\mathscr{A}_{1}\bowtie \mathscr{A}_{2})\bowtie \mathscr{A}_{3}$ is denoted by,
 \begin{eqnarray*}
     & \langle
         (L_1\times L_2)\times L_3, ((l_{0,1}, l_{0,2}), l_{0,3}),
-        (Acts_1\cup Acts_2)\cup Acts_3, \\
+        Acts, \\
         & (V_1\cup V_2)\cup V_3,
         V_0',
         (C_1\cup C_2)\cup V_3,
@@ -21,7 +21,7 @@ Similarly, the other $\nSTA$ $\mathscr{A}_{1}\bowtie(\mathscr{A}_{2}\bowtie \mat
 \begin{eqnarray*}
     & \langle
         L_1\times (L_2\times L_3), (l_{0,1}, (l_{0,2}, l_{0,3})),
-        Acts_1\cup(Acts_2\cup Acts_3), \\
+        Acts, \\
         & V_1\cup(V_2\cup V_3),
         V_0'',
         C_1\cup (C_2\cup V_3),
@@ -33,7 +33,6 @@ As mentioned in Definition.~\ref{def:isomorphism}, we need to construct the four
 \begin{itemize}
     \item $f_L:(L_1\times L_2)\times L_3\rightarrow L_1\times (L_2\times L_3)$, and $f_L(((l_1,l_2), l_3))=(l_1,(l_2,l_3))$. It is easy to prove that $f_L$ is a bijection,
     \item Since the \emph{union} operation on sets is associative, we have $(V_1\cup V_2)\cup V_3=V_1\cup(V_2\cup V_3)$. And $f_V$ is naturally defined as the identity function $\operatorname{id}_{V_1\cup V_2\cup V_3}$,
-    \item Similarly, we use $\operatorname{id}_{C_1\cup C_2\cup C_3}$ as $f_C$, and $\operatorname{id}_{Acts_1\cup Acts_2\cup Acts_3}$ as $f_{act}$.
 \end{itemize}
 
 With the definition of these mapping functions provided, we show why these functions satisfy the requirements in Definition.~\ref{def:isomorphism}.
@@ -217,6 +216,6 @@ The \emph{commutative} law can be also simply proved using the similar steps.
 % \end{proof}
 
 
-\subsection*{B. Semantics of the Embedded Control System}
+% \subsection*{B. Semantics of the Embedded Control System}
 
-\input{em1.jani}
+% \input{em1.jani}

@@ -17,17 +17,17 @@ Arbab, F., Baier, C., de~Boer, F.S., Rutten, J.J.M.M.: Models and temporal
 
 \bibitem{Arbab2009}
 Arbab, F., Chothia, T., van~der Mei, R., Meng, S., Moon, Y., Verhoef, C.: From
-  coordination to stochastic models of qos. In: {COORDINATION} 2009. LNCS, vol.
-  5521, pp. 268--287. Springer (2009)
+  coordination to stochastic models of {QoS}. In: {COORDINATION} 2009. LNCS,
+  vol. 5521, pp. 268--287. Springer (2009)
 
 \bibitem{Models2005}
-Baier, C.: Probabilistic models for reo connector circuits. Journal of
+Baier, C.: Probabilistic models for {Reo} connector circuits. Journal of
   Universal Computer Science  11(10),  1718--1748 (2005)
 
 \bibitem{Baier2006a}
 Baier, C., Sirjani, M., Arbab, F., Rutten, J.: Modeling component connectors in
-  reo by constraint automata. Science of Computer Programming  61(2),  75--113
-  (2006)
+  {Reo} by constraint automata. Science of Computer Programming  61(2),
+  75--113 (2006)
 
 \bibitem{Baier2006}
 Baier, C., Wolf, V.: Stochastic reasoning about channel-based component
@@ -46,22 +46,17 @@ Hahn, E.M., Li, Y., Schewe, S., Turrini, A., Zhang, L.: {IscasMC}: A web-based
 
 \bibitem{Hartmanns12}
 Hartmanns, A.: Modest – a unified language for quantitative models. In:
-  Proceedings of {FDL}'12. pp. 44--51. IEEE (2012)
+  Proceedings of {FDL}`12. pp. 44--51. IEEE (2012)
 
 \bibitem{Jongmans2012}
-Jongmans, S.S.T.Q., Arbab, F.: Overview of thirty semantic formalisms for reo.
-  Scientific Annals of Computer Science  22(1),  201--251 (2012)
-
-\bibitem{Kwia2007}
-Kwiatkowska, M., Norman, G., Parker, D.: Controller dependability analysis by
-  probabilistic model checking. Control Engineering Practice  15(11),
-  1427--1434 (2007)
+Jongmans, S.S.T.Q., Arbab, F.: Overview of thirty semantic formalisms for
+  {Reo}. Scientific Annals of Computer Science  22(1),  201--251 (2012)
 
 \bibitem{Li2009}
 Li, H.: Introducing Windows Azure. Apress, Berkely, CA, USA (2009)
 
 \bibitem{Li2015}
-Li, Y., Sun, M.: Modeling and verification of component connectors in coq.
+Li, Y., Sun, M.: Modeling and verification of component connectors in {Coq}.
   Science of Computer Programming  113,  285--301 (2015)
 
 \bibitem{Meng2012}
@@ -82,12 +77,12 @@ Oliveira, N., Barbosa, L.S.: An enhanced model for stochastic coordination.
   Electronic Proceedings in Theoretical Computer Science  228,  35--45 (2016)
 
 \bibitem{Pierro2004}
-Pierro, A.D., Hankin, C., Wiklicky, H.: Probabilistic klaim. In: de~Nicola, R.,
-  et~al. (eds.) {COORDINATION} 2004. LNCS, vol. 2949, p. 119–134. Springer
-  (2004)
+Pierro, A.D., Hankin, C., Wiklicky, H.: Probabilistic {KLAIM}. In: de~Nicola,
+  R., et~al. (eds.) {COORDINATION} 2004. LNCS, vol. 2949, p. 119–134.
+  Springer (2004)
 
 \bibitem{Priami95}
-Priami, C.: Stochastic pi-calculus. The Computer Journa  38(7),  578--589
+Priami, C.: Stochastic pi-calculus. The Computer Journal  38(7),  578--589
   (1995)
 
 \end{thebibliography}

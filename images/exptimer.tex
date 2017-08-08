@@ -1,0 +1,29 @@
+\begin{tikzpicture}[scale=1.4]
+
+\tikzstyle{every node}=[font=\small]
+\tikzstyle{label}=[draw=none]
+
+\ionode{(A)}{(-0.3, 0)}{node [left=2] {A}}
+\mixednode{(B)}{(1,1)}{node [above=2] {B}}
+\mixednode{(C)}{(1,-1)}{node [below=2] {C}}
+\mixednode{(D)}{(4,1)}{node [above=2] {D}}
+\xrouter{(E)}{(3,0)}{node [above=2] {E}}
+\mixednode{(F)}{(2,-1)}{node [below=2] {F}}
+\mixednode{(G)}{(4,-1)}{node [below=2] {G}}
+\ionode{(H)}{(5.3, 0)}{node [right=2] {H}}
+
+\filter{(A)}{(B)}{node [xshift=-2,yshift=2,sloped,anchor=south,auto=false] {\small{$dA\neq \mbox{EXP}$}}}
+\filter{(A)}{(C)}{node [xshift=-2,yshift=-2,sloped,anchor=north,auto=false] {\small{$dA=\mbox{EXP}$}}}
+\fifoe{(B)}{(D)}{}
+\sync{(F)}{(G)}{}
+\map{(C)}{(F)}{node [above=2] {$dF:=t$}}
+\map{(G)}{(H)}{node [xshift=-2,yshift=-2,sloped,anchor=north,auto=false] {\scriptsize{\emph{dH:=TIMEOUT}}}}
+\sync{(E)}{(H)}{}
+
+\syncdrain{(D)}{(E)}{}
+\syncdrain{(D)}{(G)}{}
+
+\draw (B) -- (1,0);
+\ptimer{(1,0)}{(F)}{(E)}{node [above] {$t$}}
+
+\end{tikzpicture}

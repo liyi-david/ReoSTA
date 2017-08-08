@@ -7,11 +7,11 @@
     {\textbf{Init}};
     
     \node[state,    	% layout (defined above)
-    text width=1.5cm, 	% max text width
+    text width=1.8cm, 	% max text width
     right of=init,
     node distance=6.5cm,
     anchor=center] (pending) 	% posistion relative to the center of the 'box'
-    {\textbf{Pending}\\$t\leq delay$};
+    {\textbf{Activated}\\$t\leq delay$};
     
     % draw the paths and and print some Text below/above the graph
     \path
@@ -36,7 +36,7 @@
         (init)
 
         (pending)   edge[bend right=20, ->]
-            node[above] {[\textbf{i}, \emph{t = delay}]}
+            node[above] {[\emph{t = delay}]}
         (init)
 
         (pending)      edge[loop, ->,in=120,out=60, looseness=8]

@@ -17,7 +17,7 @@
 \usepackage{color}
 \input{images/tikzstyles}
 \newcommand{\xy}[1]{\textcolor{red}{#1}}
-\newcommand{\ly}[1]{\textcolor{blue}{#1}}
+\newcommand{\ly}[1]{\textcolor{black}{#1}}
 \newcommand{\sem}[1]{$[\![{#1}]\!]$}
 % todo: what is the proper name of the new model ?
 \newcommand{\nSTA}{\mbox{STA}_r}
@@ -43,7 +43,7 @@ middlewares) are widely used to organize the separated components and
 make them functioning. Apparently, reliability of such systems highly
 depends on the correctness of their connectors. Reo is a channel-based
 coordination language where complex connectors are constructed
-from simpler ones in a compositional approach. In this paper, we
+from simpler ones through a compositional approach. In this paper, we
 propose a stochastic and real-time extension of Reo, including a set
 of new primitive channels and an expressive semantics named
 \emph{Stochastic Timed Automata for Reo} ($\nSTA$). With the support
@@ -58,8 +58,8 @@ extensions can be easily encoded, integrated, and analyzed.
     \input{chapters/introduction}
     \input{chapters/extension}
     \input{chapters/semantics}
-    \input{chapters/casestudies}
     \input{chapters/discussion}
+    \input{chapters/casestudies}
 
     \input{chapters/conclusion}
 
